@@ -689,6 +689,22 @@ button.hero-title,.hero-title{font-family:var(--display);font-weight:500;font-si
 .searchbar,.progress-card{margin-inline:-16px;padding-inline:16px;background:linear-gradient(180deg,rgba(6,9,20,.9),rgba(6,9,20,.7))}
 @media (max-width:380px){.hero .btn{padding:9px 10px;font-size:.82rem}.hero-act .iconbtn{width:36px;height:36px}}
 @media (max-width:380px){button.hero-title,.hero-title{font-size:1.15rem;padding-right:100px}.hero .orb,.hero .orb .plate.xl{width:108px;height:108px}}
+
+/* ---- v13 : recettes à la demande, glisser pour supprimer ---- */
+.aicard{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:24px;border:1px solid transparent;background:radial-gradient(90% 120% at 100% 0%,rgba(255,79,216,.18),transparent 60%) padding-box,linear-gradient(var(--glass),var(--glass)) padding-box,var(--neon) border-box;box-shadow:0 0 30px rgba(138,107,255,.2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ai-head{display:flex;gap:12px;align-items:center}
+.ai-head>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ai-head b{font-family:var(--display);font-weight:500;font-size:.92rem;color:#fff}
+.ai-head span{font-size:.8rem;color:var(--muted)}
+.ai-ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--neon);color:#fff;flex:none;box-shadow:0 0 18px rgba(138,107,255,.5)}
+.aicard .busy{background:rgba(255,255,255,.04)}
+.aicard .busy>div{flex:1;min-width:0}
+.item{touch-action:pan-y;position:relative;background:linear-gradient(270deg,rgba(255,79,216,calc(var(--sw,0)*.45)),transparent 70%);border-radius:10px;will-change:transform}
+.item.swiping{cursor:grabbing}
+.item.swiping::after{content:"Retirer";position:absolute;right:-78px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);opacity:var(--sw,0)}
+.rayon{overflow:hidden}
+.toast.undo{display:flex;align-items:center;gap:14px;padding:8px 8px 8px 16px}
+.toast.undo button{border:0;background:var(--neon);color:#fff;font-weight:800;border-radius:10px;padding:7px 12px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -1088,6 +1104,241 @@ jambalaya:[15,35,1,"Cocotte avec couvercle","Ne remuez pas le riz pendant la cui
 TERROIR.push(...T2);
 
 TERROIR.forEach(r=>r.terroir=true);
+
+const W3=[
+// --- Mexique & Caraïbes
+{id:"pozole",nom:"Pozole rojo au poulet",cuisine:"Mexique",region:"Mexique & Caraïbes",prot:"poulet",temps:75,four:null,
+ ing:[["Hauts de cuisse de poulet désossés",400,"g","B"],["Maïs pozole (hominy, en boîte)",1,"boîte","E"],["Piments guajillo séchés",3,"","S"],["Oignon",1,"","F"],["Ail",3,"gousse","F"],["Origan séché",1,"c.c.","S"],["Cumin",0.5,"c.c.","S"],["Chou blanc",150,"g","F"],["Radis",6,"","F"],["Citron vert",2,"","F"],["Tortillas de maïs",4,"","E"]],
+ steps:[["Épépiner les piments guajillo et les tremper dans de l’eau très chaude.",15],["Pocher le poulet dans 1,2 L d’eau salée avec un demi-oignon et une gousse d’ail. Le retirer et l’effilocher.",25],["Mixer les piments égouttés avec 2 gousses d’ail, l’origan, le cumin et une louche de bouillon, puis filtrer dans le bouillon.",5],["Ajouter le maïs pozole égoutté et le poulet, mijoter.",20],["Servir avec chou émincé, radis en rondelles, oignon cru, citron vert et tortillas grillées au four.",5]]},
+{id:"tinga",nom:"Tostadas de tinga de pollo",cuisine:"Mexique",region:"Mexique & Caraïbes",prot:"poulet",temps:40,four:200,
+ ing:[["Filets de poulet",400,"g","B"],["Tomates concassées",1,"boîte","E"],["Oignon",2,"","F"],["Ail",2,"gousse","F"],["Piment chipotle en poudre",1,"c.c.","S"],["Origan séché",0.5,"c.c.","S"],["Tortillas de maïs",6,"","E"],["Haricots noirs",1,"boîte","E"],["Avocat",1,"","F"],["Feta",60,"g","C"],["Citron vert",1,"","F"]],
+ steps:[["Pocher le poulet dans l’eau salée, puis l’effilocher.",15],["Faire fondre les oignons émincés, ajouter ail, chipotle, origan et tomates, mijoter.",12],["Ajouter le poulet et laisser réduire jusqu’à ce que la sauce l’enrobe.",5],["Badigeonner les tortillas d’huile et les cuire à 200 °C jusqu’à ce qu’elles soient croustillantes.",8],["Monter : haricots écrasés, tinga, avocat, feta émiettée, citron vert.",3]]},
+{id:"cochinita",nom:"Cochinita pibil, porc au rocou",cuisine:"Mexique",region:"Mexique & Caraïbes",prot:"porc",temps:200,four:160,veille:true,
+ ing:[["Échine de porc",700,"g","B"],["Pâte d’achiote (rocou)",50,"g","S"],["Orange",2,"","F"],["Citron vert",3,"","F"],["Ail",3,"gousse","F"],["Cumin",0.5,"c.c.","S"],["Oignon rouge",1,"","F"],["Tortillas de maïs",8,"","E"]],
+ steps:[["La veille : délayer l’achiote avec le jus des oranges et de 2 citrons verts, l’ail écrasé, le cumin et 1 c.c. de sel. Y mariner le porc en gros morceaux.",0],["Mettre le porc et sa marinade en cocotte, fermer hermétiquement et cuire au four à 160 °C.",180],["Émincer l’oignon rouge, le mariner dans le jus du dernier citron vert avec une pincée de sel.",10],["Effilocher la viande dans son jus et servir dans les tortillas chaudes avec les oignons.",5]]},
+{id:"ropavieja",nom:"Ropa vieja cubaine",cuisine:"Cuba",region:"Mexique & Caraïbes",prot:"bœuf",temps:150,four:null,
+ ing:[["Paleron de bœuf",500,"g","B"],["Poivrons",2,"","F"],["Oignon",1,"","F"],["Ail",3,"gousse","F"],["Tomates concassées",1,"boîte","E"],["Cumin",1,"c.c.","S"],["Origan séché",1,"c.c.","S"],["Olives vertes",40,"g","E"],["Riz",150,"g","E"],["Haricots noirs",1,"boîte","E"]],
+ steps:[["Cuire le bœuf à frémissement dans l’eau salée avec un demi-oignon.",90],["L’effilocher en fils fins : « ropa vieja » veut dire « vieux vêtements ».",10],["Sofrito : faire fondre l’oignon et les poivrons en lanières avec ail, cumin et origan, puis ajouter les tomates.",15],["Ajouter la viande, les olives et une louche de bouillon, mijoter. Cuire le riz et réchauffer les haricots.",25]]},
+{id:"griot",nom:"Griot haïtien au four et pikliz",cuisine:"Haïti",region:"Mexique & Caraïbes",prot:"porc",temps:120,four:220,
+ ing:[["Échine de porc",500,"g","B"],["Orange",2,"","F"],["Citron vert",2,"","F"],["Oignon",1,"","F"],["Ail",3,"gousse","F"],["Persil plat",1,"botte","F"],["Piment en flocons",0.5,"c.c.","S"],["Chou blanc",200,"g","F"],["Carottes",1,"","F"],["Vinaigre de vin",100,"ml","S"],["Riz",150,"g","E"],["Haricots rouges",1,"boîte","E"]],
+ steps:[["Mariner le porc en cubes avec le jus des agrumes, l’ail, le persil, l’oignon et du sel.",60],["Le faire braiser à couvert avec sa marinade, feu doux.",30],["Égoutter et rôtir à 220 °C jusqu’à ce qu’il soit doré et croustillant.",20],["Pikliz : chou, carotte et oignon émincés, piment et vinaigre. Cuire le riz avec les haricots (« riz collé aux pois »).",10]]},
+// --- Amérique latine
+{id:"ceviche",nom:"Ceviche péruvien",cuisine:"Pérou",region:"Amérique latine",prot:"poisson",temps:30,four:null,
+ ing:[["Filets de poisson blanc très frais (bar, dorade)",350,"g","B"],["Citron vert",6,"","F"],["Oignon rouge",1,"","F"],["Piment en flocons",0.5,"c.c.","S"],["Coriandre fraîche",1,"botte","F"],["Patates douces",300,"g","F"],["Épis de maïs",1,"","F"]],
+ steps:[["Cuire la patate douce en rondelles et le maïs dans l’eau salée.",20],["Couper le poisson en cubes de 2 cm. Émincer finement l’oignon rouge et le rincer à l’eau froide.",8],["Mélanger le poisson avec sel, piment et le jus des citrons verts, jusqu’à ce qu’il blanchisse en surface.",5],["Ajouter oignon et coriandre, servir aussitôt avec patate douce et maïs.",2]]},
+{id:"ajidegallina",nom:"Ají de gallina",cuisine:"Pérou",region:"Amérique latine",prot:"poulet",temps:55,four:null,
+ ing:[["Filets de poulet",400,"g","B"],["Pain de campagne",1,"","P"],["Lait",200,"ml","C"],["Oignon",1,"","F"],["Ail",2,"gousse","F"],["Piment jaune (ají amarillo, en pâte)",2,"c.s.","S"],["Parmesan",30,"g","C"],["Noix",30,"g","E"],["Œufs",2,"","C"],["Olives noires",30,"g","E"],["Riz",150,"g","E"]],
+ steps:[["Pocher le poulet, l’effilocher et garder le bouillon. Cuire les œufs durs.",20],["Faire tremper le pain dans le lait.",5],["Faire fondre oignon, ail et ají amarillo, puis mixer avec le pain, les noix et un peu de bouillon.",10],["Remettre dans la poêle avec le poulet et le parmesan, mijoter jusqu’à une sauce crémeuse. Lancer le riz.",12],["Servir avec les œufs durs et les olives.",0]]},
+{id:"empanadas",nom:"Empanadas argentines au four",cuisine:"Argentine",region:"Amérique latine",prot:"bœuf",temps:60,four:200,
+ ing:[["Pâte brisée",2,"","C"],["Bœuf haché",300,"g","B"],["Oignon",2,"","F"],["Poivrons",1,"","F"],["Œufs",2,"","C"],["Olives vertes",40,"g","E"],["Cumin",1,"c.c.","S"],["Paprika",1,"c.c.","S"]],
+ steps:[["Faire fondre oignons et poivron hachés, ajouter le bœuf, le cumin et le paprika, cuire puis laisser refroidir.",15],["Cuire un œuf dur, le hacher avec les olives et l’ajouter à la farce.",10],["Découper des disques de 12 cm dans la pâte, garnir et fermer en repli torsadé.",15],["Dorer au jaune d’œuf et cuire à 200 °C.",20]]},
+{id:"moqueca",nom:"Moqueca de peixe",cuisine:"Brésil",region:"Amérique latine",prot:"poisson",temps:40,four:null,
+ ing:[["Filets de poissons blancs (lieu, merlu)",400,"g","B"],["Lait de coco",400,"ml","E"],["Poivrons",2,"","F"],["Tomates",2,"","F"],["Oignon",1,"","F"],["Ail",2,"gousse","F"],["Citron vert",2,"","F"],["Coriandre fraîche",1,"botte","F"],["Paprika",1,"c.c.","S"],["Riz",150,"g","E"]],
+ steps:[["Mariner le poisson avec le jus de citron vert, l’ail et du sel.",15],["Dans une cocotte, alterner rondelles d’oignon, poivrons et tomates.",5],["Poser le poisson dessus, verser le lait de coco et le paprika, couvrir. Lancer le riz.",2],["Cuire doucement sans remuer, jusqu’à ce que le poisson s’effeuille.",15],["Parsemer de coriandre au moment de servir.",0]]},
+{id:"arepas",nom:"Arepas au fromage, poulet et avocat",cuisine:"Colombie",region:"Amérique latine",prot:"poulet",temps:40,four:200,
+ ing:[["Farine de maïs précuite (type P.A.N.)",250,"g","E"],["Mozzarella",1,"boule","C"],["Filets de poulet",250,"g","B"],["Avocat",1,"","F"],["Oignon rouge",1,"","F"],["Citron vert",1,"","F"],["Coriandre fraîche",1,"botte","F"],["Yaourt nature",1,"pot","C"]],
+ steps:[["Mélanger la farine avec 330 ml d’eau tiède et 1 c.c. de sel, pétrir 2 min et laisser reposer.",7],["Former 4 galettes épaisses de 1,5 cm. Pocher le poulet dans l’eau salée et l’effilocher.",15],["Dorer les arepas 5 min par face à la poêle, puis finir au four à 200 °C : elles sonnent creux.",20],["Garniture : poulet, avocat écrasé, yaourt, oignon, coriandre et citron vert. Ouvrir les arepas et garnir avec la mozzarella.",5]]},
+{id:"bandeja",nom:"Bandeja paisa (version au four)",cuisine:"Colombie",region:"Amérique latine",prot:"porc",temps:95,four:220,
+ ing:[["Haricots rouges",1,"boîte","E"],["Poitrine de porc",250,"g","B"],["Bœuf haché",200,"g","B"],["Chorizo",100,"g","B"],["Œufs",2,"","C"],["Banane plantain mûre",1,"","F"],["Riz",120,"g","E"],["Avocat",1,"","F"],["Oignon",1,"","F"],["Tomates",2,"","F"],["Cumin",0.5,"c.c.","S"]],
+ steps:[["Rôtir la poitrine en morceaux à 220 °C jusqu’à ce que la couenne soit croustillante : un chicharrón sans friture.",45],["Hogao : faire fondre oignon et tomates hachés, en ajouter la moitié aux haricots.",15],["Cuire le bœuf émietté très finement avec le cumin et un peu d’hogao. Lancer le riz.",10],["Rôtir la banane plantain en tranches et le chorizo sur la plaque.",20],["Cuire les œufs au plat et tout dresser dans une grande assiette avec l’avocat.",5]]},
+{id:"pasteldechoclo",nom:"Pastel de choclo",cuisine:"Chili",region:"Amérique latine",prot:"bœuf",temps:75,four:190,
+ ing:[["Maïs doux",2,"boîte","E"],["Lait",100,"ml","C"],["Basilic",1,"botte","F"],["Bœuf haché",300,"g","B"],["Oignon",2,"","F"],["Cumin",1,"c.c.","S"],["Paprika",1,"c.c.","S"],["Œufs",2,"","C"],["Olives noires",30,"g","E"],["Sucre",1,"c.c.","E"]],
+ steps:[["Pino : faire fondre les oignons, ajouter le bœuf, le cumin et le paprika, cuire. Cuire les œufs durs.",15],["Mixer le maïs égoutté avec le lait et le basilic, épaissir à feu doux en remuant.",8],["Dans un plat : pino, œufs durs en quartiers, olives, puis la crème de maïs.",10],["Saupoudrer de sucre et gratiner à 190 °C.",35]]},
+// --- Amérique du Nord
+{id:"patechinois",nom:"Pâté chinois québécois",cuisine:"Québec",region:"Amérique du Nord",prot:"bœuf",temps:60,four:190,
+ ing:[["Bœuf haché",400,"g","B"],["Oignon",1,"","F"],["Maïs doux",1,"boîte","E"],["Pommes de terre",700,"g","F"],["Lait",100,"ml","C"],["Beurre",20,"g","C"],["Paprika",0.5,"c.c.","S"]],
+ steps:[["Cuire les pommes de terre et les écraser en purée avec le lait et le beurre.",25],["Dorer le bœuf avec l’oignon haché, saler.",10],["Dans un plat : bœuf, maïs, puis purée, paprika.",5],["Gratiner à 190 °C.",20]]},
+{id:"macncheese",nom:"Mac and cheese au four",cuisine:"États-Unis",region:"Amérique du Nord",prot:"végétarien",temps:45,four:200,
+ ing:[["Macaronis",200,"g","E"],["Cheddar râpé",150,"g","C"],["Lait",400,"ml","C"],["Beurre",30,"g","C"],["Farine",2,"c.s.","E"],["Moutarde",1,"c.c.","S"],["Chapelure",3,"c.s.","E"],["Paprika fumé",0.5,"c.c.","S"]],
+ steps:[["Cuire les macaronis 2 min de moins que le temps du paquet.",9],["Béchamel : faire fondre le beurre, ajouter la farine, puis le lait en fouettant jusqu’à épaississement.",8],["Hors du feu, ajouter cheddar, moutarde et paprika, puis mélanger avec les pâtes.",3],["Verser dans un plat, couvrir de chapelure et gratiner à 200 °C.",20]]},
+// --- Afrique
+{id:"jollof",nom:"Jollof rice au poulet",cuisine:"Nigeria",region:"Afrique de l’Ouest",prot:"poulet",temps:70,four:200,
+ ing:[["Cuisses de poulet",2,"","B"],["Riz",180,"g","E"],["Poivrons",2,"","F"],["Tomates concassées",1,"boîte","E"],["Concentré de tomate",2,"c.s.","E"],["Oignon",2,"","F"],["Ail",2,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Bouillon de volaille",1,"cube","E"],["Curry en poudre",1,"c.c.","S"],["Feuilles de laurier",2,"","S"],["Piment en flocons",0.5,"c.c.","S"]],
+ steps:[["Rôtir le poulet assaisonné de curry et de sel à 200 °C.",40],["Mixer poivrons, tomates, un oignon, l’ail, le gingembre et le piment.",5],["Faire revenir l’autre oignon et le concentré 3 min, ajouter la purée et réduire de moitié.",20],["Ajouter le riz rincé, 350 ml de bouillon et le laurier. Couvrir d’alu puis du couvercle et cuire très doucement sans remuer.",25],["Servir avec le poulet.",0]]},
+{id:"thieboudienne",nom:"Thiéboudienne",cuisine:"Sénégal",region:"Afrique de l’Ouest",prot:"poisson",temps:90,four:null,
+ ing:[["Dos de cabillaud",2,"","B"],["Riz",180,"g","E"],["Concentré de tomate",2,"c.s.","E"],["Oignon",2,"","F"],["Ail",3,"gousse","F"],["Persil plat",1,"botte","F"],["Piment en flocons",0.5,"c.c.","S"],["Carottes",2,"","F"],["Chou blanc",200,"g","F"],["Aubergine",1,"","F"],["Manioc (yuca)",200,"g","F"],["Patates douces",200,"g","F"]],
+ steps:[["Rof : piler persil, ail, piment et sel, et en farcir le poisson par une entaille.",10],["Faire revenir les oignons et le concentré 5 min dans 3 c.s. d’huile, ajouter 1,2 L d’eau et les légumes en gros morceaux.",10],["Cuire jusqu’à ce que les légumes soient tendres, ajouter le poisson 15 min avant la fin, puis retirer poisson et légumes.",35],["Cuire le riz rincé dans le bouillon restant (2 volumes), à couvert, feu doux.",25],["Servir le riz avec le poisson et les légumes par-dessus.",0]]},
+{id:"dorowat",nom:"Doro wat",cuisine:"Éthiopie",region:"Afrique de l’Est & australe",prot:"poulet",temps:100,four:null,
+ ing:[["Cuisses de poulet",2,"","B"],["Oignon",4,"","F"],["Beurre",40,"g","C"],["Berbéré",2,"c.s.","S"],["Ail",3,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Concentré de tomate",1,"c.s.","E"],["Œufs",2,"","C"],["Citron",1,"","F"],["Riz",150,"g","E"]],
+ steps:[["Mariner le poulet avec le jus de citron et du sel. Cuire les œufs durs.",15],["Cuire les oignons hachés très finement à sec, à feu doux, jusqu’à ce qu’ils soient très réduits et dorés.",30],["Ajouter beurre, berbéré, ail, gingembre et concentré, puis le poulet et 300 ml d’eau.",5],["Mijoter à couvert.",40],["Ajouter les œufs durs entaillés et réchauffer.",10]]},
+{id:"bobotie",nom:"Bobotie",cuisine:"Afrique du Sud",region:"Afrique de l’Est & australe",prot:"bœuf",temps:70,four:180,
+ ing:[["Bœuf haché",400,"g","B"],["Oignon",1,"","F"],["Pain de campagne",1,"","P"],["Lait",250,"ml","C"],["Œufs",2,"","C"],["Curry en poudre",2,"c.c.","S"],["Curcuma",1,"c.c.","S"],["Chutney de mangue",2,"c.s.","E"],["Raisins secs",30,"g","E"],["Amandes",20,"g","E"],["Feuilles de laurier",3,"","S"],["Riz",150,"g","E"]],
+ steps:[["Faire tremper le pain dans la moitié du lait.",5],["Faire fondre l’oignon, ajouter curry et curcuma, puis le bœuf.",10],["Mélanger avec le pain essoré, le chutney, les raisins et les amandes, verser dans un plat.",5],["Battre les œufs avec le reste du lait, verser dessus, piquer les feuilles de laurier. Cuire à 180 °C et préparer un riz au curcuma.",40]]},
+{id:"piripiri",nom:"Poulet piri-piri au four",cuisine:"Mozambique",region:"Afrique de l’Est & australe",prot:"poulet",temps:75,four:220,
+ ing:[["Cuisses de poulet",2,"","B"],["Piment en flocons",1,"c.c.","S"],["Paprika fumé",2,"c.c.","S"],["Ail",4,"gousse","F"],["Citron",2,"","F"],["Vinaigre de vin",1,"c.s.","S"],["Origan séché",1,"c.c.","S"],["Pommes de terre",500,"g","F"],["Salade verte",1,"","F"]],
+ steps:[["Mixer piment, paprika, ail, jus de citron, vinaigre, origan, 3 c.s. d’huile et du sel.",5],["Entailler le poulet et le mariner.",30],["Rôtir avec les pommes de terre en quartiers à 220 °C, en arrosant de marinade à mi-cuisson.",40]]},
+// --- Maghreb & Moyen-Orient
+{id:"koshari",nom:"Koshari égyptien",cuisine:"Égypte",region:"Maghreb & Moyen-Orient",prot:"végétarien",temps:60,four:200,
+ ing:[["Lentilles vertes",100,"g","E"],["Riz",100,"g","E"],["Petites pâtes",100,"g","E"],["Pois chiches",1,"boîte","E"],["Oignon",3,"","F"],["Tomates concassées",1,"boîte","E"],["Ail",3,"gousse","F"],["Vinaigre de vin",2,"c.s.","S"],["Cumin",1,"c.c.","S"],["Piment en flocons",0.5,"c.c.","S"]],
+ steps:[["Rôtir les oignons émincés et huilés à 200 °C jusqu’à ce qu’ils soient bruns et croustillants.",35],["Cuire les lentilles 15 min, ajouter le riz et cuire encore à couvert.",30],["Cuire les pâtes.",10],["Sauce : ail, cumin, piment, tomates et vinaigre, réduire.",12],["Monter : riz-lentilles, pâtes, pois chiches, sauce, oignons croustillants.",3]]},
+// --- Iran & Caucase
+{id:"ghormeh",nom:"Ghormeh sabzi",cuisine:"Iran",region:"Iran & Caucase",prot:"bœuf",temps:150,four:null,
+ ing:[["Paleron de bœuf",400,"g","B"],["Persil plat",2,"botte","F"],["Coriandre fraîche",1,"botte","F"],["Épinards frais",100,"g","F"],["Fenugrec séché",1,"c.s.","S"],["Haricots rouges",1,"boîte","E"],["Citrons séchés (limou omani)",3,"","S"],["Oignon",1,"","F"],["Curcuma",1,"c.c.","S"],["Riz",150,"g","E"]],
+ steps:[["Dorer l’oignon et la viande en cubes avec le curcuma.",10],["Couvrir d’eau et mijoter.",60],["Hacher finement herbes et épinards, les faire revenir dans 3 c.s. d’huile jusqu’à ce qu’ils foncent.",15],["Ajouter herbes, fenugrec, citrons séchés percés et haricots, mijoter encore.",50],["Cuire le riz basmati.",15]]},
+{id:"fesenjan",nom:"Fesenjan, poulet aux noix et à la grenade",cuisine:"Iran",region:"Iran & Caucase",prot:"poulet",temps:90,four:null,
+ ing:[["Hauts de cuisse de poulet désossés",500,"g","B"],["Noix",150,"g","E"],["Mélasse de grenade",3,"c.s.","E"],["Oignon",1,"","F"],["Curcuma",0.5,"c.c.","S"],["Cannelle",0.5,"c.c.","S"],["Sucre",1,"c.c.","E"],["Riz",150,"g","E"]],
+ steps:[["Torréfier les noix à sec, puis les mixer en poudre fine.",8],["Faire revenir l’oignon et le poulet avec le curcuma.",10],["Ajouter les noix et 400 ml d’eau, mijoter à couvert en remuant : l’huile des noix remonte.",45],["Ajouter mélasse de grenade, cannelle et sucre, ajuster l’aigre-doux et mijoter. Cuire le riz.",20]]},
+{id:"chkmeruli",nom:"Chkmeruli, poulet à l’ail et à la crème",cuisine:"Géorgie",region:"Iran & Caucase",prot:"poulet",temps:55,four:220,
+ ing:[["Cuisses de poulet",2,"","B"],["Ail",8,"gousse","F"],["Crème fraîche",150,"ml","C"],["Lait",100,"ml","C"],["Beurre",20,"g","C"],["Coriandre fraîche",1,"botte","F"],["Pain de campagne",1,"","P"]],
+ steps:[["Saler le poulet et le rôtir à 220 °C jusqu’à ce que la peau soit croustillante.",40],["Écraser l’ail avec du sel, le chauffer avec crème, lait et beurre sans bouillir.",8],["Verser la sauce sur le poulet et remettre au four.",5],["Parsemer de coriandre, servir avec du pain pour saucer.",0]]},
+{id:"khachapuri",nom:"Khachapuri adjarien",cuisine:"Géorgie",region:"Iran & Caucase",prot:"œufs",temps:110,four:230,
+ ing:[["Farine",300,"g","E"],["Levure boulangère",1,"sachet","E"],["Lait",180,"ml","C"],["Mozzarella",1,"boule","C"],["Feta",150,"g","C"],["Œufs",3,"","C"],["Beurre",20,"g","C"]],
+ steps:[["Pâte : farine, levure, lait tiède, sel et 1 c.s. d’huile. Pétrir et laisser lever.",75],["Mélanger mozzarella et feta râpées avec un œuf.",5],["Former 2 bateaux, les remplir de fromage et cuire à 230 °C.",15],["Creuser un puits, y casser un jaune d’œuf, remettre 2 min au four et ajouter le beurre.",3]]},
+// --- Grèce & Turquie
+{id:"imambayildi",nom:"Imam bayildi, aubergines farcies",cuisine:"Turquie",region:"Grèce & Turquie",prot:"végétarien",temps:85,four:180,
+ ing:[["Aubergine",2,"","F"],["Oignon",2,"","F"],["Tomates",3,"","F"],["Ail",4,"gousse","F"],["Persil plat",1,"botte","F"],["Sucre",1,"c.c.","E"],["Cannelle",0.5,"c.c.","S"],["Pain pita ou naan",2,"","P"],["Yaourt nature",1,"pot","C"]],
+ steps:[["Inciser les aubergines en long, les huiler et les rôtir entières à 220 °C jusqu’à ce qu’elles soient tendres.",30],["Faire fondre longuement les oignons émincés, ajouter ail, tomates, cannelle, sucre et persil.",20],["Ouvrir les aubergines et les farcir généreusement.",5],["Arroser d’huile d’olive et de 50 ml d’eau, cuire à 180 °C.",25]]},
+{id:"gemista",nom:"Gemista, légumes farcis au riz",cuisine:"Grèce",region:"Grèce & Turquie",prot:"végétarien",temps:90,four:190,
+ ing:[["Tomates",4,"","F"],["Poivrons",2,"","F"],["Riz",120,"g","E"],["Oignon",1,"","F"],["Ail",1,"gousse","F"],["Persil plat",1,"botte","F"],["Basilic",1,"botte","F"],["Pommes de terre",300,"g","F"],["Feta",80,"g","C"]],
+ steps:[["Couper les chapeaux, évider tomates et poivrons, mixer la pulpe des tomates.",15],["Mélanger riz cru, oignon, ail, herbes, la moitié de la pulpe, 3 c.s. d’huile et du sel.",5],["Farcir aux trois quarts, refermer et caler avec les pommes de terre en quartiers.",10],["Verser le reste de pulpe et un verre d’eau, cuire à 190 °C.",60]]},
+{id:"spanakopita",nom:"Spanakopita, tourte épinards-feta",cuisine:"Grèce",region:"Grèce & Turquie",prot:"végétarien",temps:70,four:180,
+ ing:[["Pâte filo",1,"","E"],["Épinards frais",500,"g","F"],["Feta",200,"g","C"],["Œufs",2,"","C"],["Oignons nouveaux",1,"botte","F"],["Aneth",1,"botte","F"],["Beurre",50,"g","C"]],
+ steps:[["Faire tomber les épinards et les essorer très fort.",10],["Mélanger avec la feta émiettée, les œufs, les oignons nouveaux, l’aneth et du poivre.",5],["Dans un moule : 6 feuilles de filo beurrées, la farce, 6 feuilles beurrées dessus. Prédécouper en parts.",15],["Cuire à 180 °C jusqu’à ce que ce soit bien doré.",40]]},
+// --- Inde & Himalaya
+{id:"butterchicken",nom:"Butter chicken",cuisine:"Inde",region:"Inde & Himalaya",prot:"poulet",temps:75,four:220,
+ ing:[["Hauts de cuisse de poulet désossés",450,"g","B"],["Yaourt nature",1,"pot","C"],["Garam masala",2,"c.c.","S"],["Ail",3,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Tomates concassées",1,"boîte","E"],["Beurre",30,"g","C"],["Crème fraîche",80,"ml","C"],["Sucre",1,"c.c.","E"],["Piment en flocons",0.5,"c.c.","S"],["Riz",150,"g","E"],["Pain pita ou naan",2,"","P"]],
+ steps:[["Mariner le poulet avec le yaourt, la moitié du garam masala, l’ail et le gingembre râpés, du sel.",30],["Le rôtir sur plaque à 220 °C jusqu’à légère coloration.",15],["Sauce : beurre, tomates, reste du garam masala, piment et sucre. Mijoter, puis mixer.",18],["Ajouter la crème et le poulet, mijoter. Lancer le riz.",10]]},
+{id:"chanamasala",nom:"Chana masala",cuisine:"Inde",region:"Inde & Himalaya",prot:"végétarien",temps:35,four:null,
+ ing:[["Pois chiches",2,"boîte","E"],["Oignon",1,"","F"],["Tomates concassées",1,"boîte","E"],["Ail",2,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Cumin",1,"c.c.","S"],["Garam masala",1,"c.c.","S"],["Curcuma",0.5,"c.c.","S"],["Coriandre fraîche",1,"botte","F"],["Citron",1,"","F"],["Riz",150,"g","E"]],
+ steps:[["Faire revenir l’oignon jusqu’à ce qu’il soit bien doré.",10],["Ajouter ail, gingembre et épices 1 min, puis les tomates.",5],["Ajouter les pois chiches et 150 ml d’eau, mijoter en écrasant quelques pois chiches. Cuire le riz.",15],["Finir avec citron et coriandre.",1]]},
+{id:"palakpaneer",nom:"Palak paneer",cuisine:"Inde",region:"Inde & Himalaya",prot:"végétarien",temps:35,four:null,
+ ing:[["Épinards frais",400,"g","F"],["Paneer",200,"g","C"],["Oignon",1,"","F"],["Ail",2,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Tomates",1,"","F"],["Garam masala",1,"c.c.","S"],["Cumin",1,"c.c.","S"],["Crème fraîche",50,"ml","C"],["Pain pita ou naan",2,"","P"]],
+ steps:[["Blanchir les épinards 1 min, les refroidir dans l’eau glacée et les mixer.",6],["Dorer le paneer en cubes à la poêle, réserver.",6],["Faire revenir oignon, ail, gingembre et cumin, puis la tomate et le garam masala.",10],["Ajouter les épinards mixés et la crème, puis le paneer, et chauffer.",6]]},
+{id:"momos",nom:"Momos népalais et achar de tomate",cuisine:"Népal",region:"Inde & Himalaya",prot:"porc",temps:50,four:null,
+ ing:[["Porc haché",300,"g","B"],["Feuilles à gyoza",24,"","E"],["Oignon",1,"","F"],["Ail",2,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Coriandre fraîche",1,"botte","F"],["Sauce soja",1,"c.s.","S"],["Tomates",2,"","F"],["Piment en flocons",0.5,"c.c.","S"]],
+ steps:[["Farce : porc, oignon haché fin, ail, gingembre, coriandre, soja et sel.",10],["Garnir chaque feuille d’une c.c. de farce et plisser pour fermer.",20],["Cuire à la vapeur sur papier cuisson percé.",12],["Achar : griller les tomates à la poêle, puis les mixer avec piment, ail et sel.",8]]},
+{id:"aloogobi",nom:"Aloo gobi rôti",cuisine:"Inde",region:"Inde & Himalaya",prot:"végétarien",temps:45,four:220,
+ ing:[["Chou-fleur",1,"","F"],["Pommes de terre",400,"g","F"],["Oignon",1,"","F"],["Cumin",1,"c.c.","S"],["Curcuma",1,"c.c.","S"],["Garam masala",1,"c.c.","S"],["Gingembre frais",1,"morceau","F"],["Tomates",1,"","F"],["Coriandre fraîche",1,"botte","F"],["Pain pita ou naan",2,"","P"]],
+ steps:[["Mélanger le chou-fleur en fleurettes, les pommes de terre en dés, l’oignon, les épices, le gingembre râpé, 3 c.s. d’huile et du sel.",10],["Rôtir à 220 °C en remuant une fois.",30],["Ajouter la tomate en dés 5 min avant la fin, puis la coriandre.",5]]},
+// --- Asie de l'Est
+{id:"kungpao",nom:"Poulet kung pao",cuisine:"Chine",region:"Asie",prot:"poulet",temps:30,four:null,
+ ing:[["Filets de poulet",350,"g","B"],["Cacahuètes",50,"g","E"],["Poivrons",1,"","F"],["Oignons nouveaux",1,"botte","F"],["Ail",2,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Sauce soja",3,"c.s.","S"],["Vinaigre de riz",1,"c.s.","S"],["Sucre",1,"c.c.","E"],["Fécule de maïs",2,"c.c.","E"],["Piment en flocons",1,"c.c.","S"],["Poivre de Sichuan",0.5,"c.c.","S"],["Riz",150,"g","E"]],
+ steps:[["Lancer le riz. Mariner le poulet en dés avec 1 c.s. de soja et 1 c.c. de fécule.",12],["Sauce : reste du soja, vinaigre, sucre, fécule et 3 c.s. d’eau.",2],["Wok très chaud : piment et poivre de Sichuan 20 s, puis le poulet.",5],["Ajouter ail, gingembre et poivron, puis la sauce, les cacahuètes et les oignons nouveaux.",3]]},
+{id:"aigredoux",nom:"Porc aigre-doux au four",cuisine:"Chine",region:"Asie",prot:"porc",temps:45,four:220,
+ ing:[["Échine de porc",400,"g","B"],["Fécule de maïs",3,"c.s.","E"],["Œufs",1,"","C"],["Ananas en morceaux",1,"boîte","E"],["Poivrons",2,"","F"],["Oignon",1,"","F"],["Ketchup",3,"c.s.","E"],["Vinaigre de riz",3,"c.s.","S"],["Sucre",2,"c.s.","E"],["Sauce soja",1,"c.s.","S"],["Riz",150,"g","E"]],
+ steps:[["Enrober le porc en cubes d’œuf battu puis de fécule.",8],["L’étaler sur une plaque huilée, arroser d’huile et cuire à 220 °C en retournant, jusqu’à ce qu’il croustille. Lancer le riz.",25],["Sauce : ketchup, vinaigre, sucre, soja, jus d’ananas et 1 c.c. de fécule.",3],["Sauter poivrons, oignon et ananas, verser la sauce, puis ajouter le porc juste avant de servir.",6]]},
+{id:"katsu",nom:"Katsu curry au four",cuisine:"Japon",region:"Asie",prot:"porc",temps:55,four:220,
+ ing:[["Échine de porc",300,"g","B"],["Chapelure panko",60,"g","E"],["Œufs",1,"","C"],["Farine",2,"c.s.","E"],["Oignon",1,"","F"],["Carottes",1,"","F"],["Pommes de terre",200,"g","F"],["Curry en poudre",2,"c.c.","S"],["Bouillon de volaille",1,"cube","E"],["Miel",1,"c.s.","E"],["Sauce soja",1,"c.s.","S"],["Riz",150,"g","E"]],
+ steps:[["Sauce : faire revenir oignon, carotte et pomme de terre en dés, ajouter curry et farine 1 min, puis 400 ml de bouillon, le miel et le soja. Mijoter.",25],["Dorer le panko à sec à la poêle. Aplatir le porc à 1 cm et le paner : farine, œuf, panko.",10],["Cuire sur grille à 220 °C en retournant à mi-cuisson. Lancer le riz.",15],["Trancher le katsu sur le riz et napper de curry.",5]]},
+{id:"okonomiyaki",nom:"Okonomiyaki",cuisine:"Japon",region:"Asie",prot:"porc",temps:35,four:null,
+ ing:[["Farine",120,"g","E"],["Œufs",2,"","C"],["Chou blanc",300,"g","F"],["Oignons nouveaux",1,"botte","F"],["Poitrine fumée",100,"g","B"],["Bouillon de volaille",1,"cube","E"],["Mayonnaise",2,"c.s.","E"],["Sauce soja",1,"c.s.","S"],["Miel",1,"c.s.","E"],["Ketchup",1,"c.s.","E"]],
+ steps:[["Pâte : farine, œufs, 120 ml de bouillon froid et du sel.",5],["Ajouter le chou émincé très finement et les oignons nouveaux.",5],["À la poêle : verser une galette épaisse, poser les tranches de poitrine, cuire à feu moyen et couvert, 5 min par face.",12],["Sauce : ketchup, soja et miel. Napper, puis tracer des filets de mayonnaise.",2]]},
+{id:"japchae",nom:"Japchae",cuisine:"Corée",region:"Asie",prot:"bœuf",temps:40,four:null,
+ ing:[["Nouilles de patate douce",150,"g","E"],["Bœuf à émincer (rumsteck)",200,"g","B"],["Épinards frais",150,"g","F"],["Carottes",1,"","F"],["Champignons de Paris",150,"g","F"],["Oignon",1,"","F"],["Ail",2,"gousse","F"],["Sauce soja",4,"c.s.","S"],["Sucre",1,"c.s.","E"],["Huile de sésame",1,"c.s.","E"],["Graines de sésame",1,"c.s.","E"]],
+ steps:[["Cuire les nouilles selon le paquet, les rincer et les couper aux ciseaux.",8],["Mariner le bœuf en lanières avec 1 c.s. de soja, l’ail et un peu de sucre.",10],["Sauter chaque légume séparément quelques minutes.",12],["Sauter le bœuf.",3],["Tout mélanger avec le reste de soja et de sucre, l’huile et les graines de sésame.",2]]},
+{id:"dakgalbi",nom:"Dakgalbi, poulet épicé sauté",cuisine:"Corée",region:"Asie",prot:"poulet",temps:35,four:null,
+ ing:[["Hauts de cuisse de poulet désossés",400,"g","B"],["Gochujang",2,"c.s.","S"],["Sauce soja",1,"c.s.","S"],["Miel",1,"c.s.","E"],["Ail",3,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Chou blanc",250,"g","F"],["Patates douces",200,"g","F"],["Oignon",1,"","F"],["Oignons nouveaux",1,"botte","F"],["Riz",150,"g","E"]],
+ steps:[["Mariner le poulet avec gochujang, soja, miel, ail et gingembre. Lancer le riz.",15],["Sauter la patate douce en bâtonnets.",5],["Ajouter poulet, chou et oignon, cuire en remuant jusqu’à ce que le poulet soit cuit.",12],["Parsemer d’oignons nouveaux.",2]]},
+// --- Asie du Sud-Est
+{id:"padthai",nom:"Pad thaï aux crevettes",cuisine:"Thaïlande",region:"Asie du Sud-Est",prot:"poisson",temps:30,four:null,
+ ing:[["Nouilles de riz plates",180,"g","E"],["Crevettes crues décortiquées",200,"g","B"],["Œufs",2,"","C"],["Pâte de tamarin",2,"c.s.","E"],["Nuoc-mâm",2,"c.s.","S"],["Sucre",1,"c.s.","E"],["Oignons nouveaux",1,"botte","F"],["Pousses de soja",150,"g","F"],["Cacahuètes",40,"g","E"],["Citron vert",1,"","F"],["Ail",2,"gousse","F"],["Piment en flocons",0.5,"c.c.","S"]],
+ steps:[["Tremper les nouilles dans l’eau chaude jusqu’à ce qu’elles soient souples mais encore fermes.",10],["Sauce : tamarin, nuoc-mâm et sucre.",2],["Wok chaud : ail et crevettes 2 min, pousser sur le côté et brouiller les œufs.",4],["Ajouter nouilles et sauce, sauter 2 à 3 min, puis pousses de soja et oignons nouveaux.",4],["Servir avec cacahuètes concassées, citron vert et piment.",1]]},
+{id:"massaman",nom:"Curry massaman au bœuf",cuisine:"Thaïlande",region:"Asie du Sud-Est",prot:"bœuf",temps:120,four:null,
+ ing:[["Paleron de bœuf",400,"g","B"],["Pâte de curry massaman",3,"c.s.","S"],["Lait de coco",400,"ml","E"],["Pommes de terre",300,"g","F"],["Oignon",1,"","F"],["Cacahuètes",40,"g","E"],["Nuoc-mâm",1,"c.s.","S"],["Sucre",1,"c.s.","E"],["Pâte de tamarin",1,"c.s.","E"],["Riz",150,"g","E"]],
+ steps:[["Faire frire la pâte de curry dans la crème du lait de coco jusqu’à ce que l’huile perle.",4],["Ajouter le bœuf en cubes, le reste du coco et 200 ml d’eau, mijoter à couvert.",75],["Ajouter pommes de terre, oignon, cacahuètes, nuoc-mâm, sucre et tamarin, mijoter.",25],["Cuire le riz jasmin.",15]]},
+{id:"nasigoreng",nom:"Nasi goreng",cuisine:"Indonésie",region:"Asie du Sud-Est",prot:"poulet",temps:25,four:null,veille:true,
+ ing:[["Riz",180,"g","E"],["Filets de poulet",200,"g","B"],["Œufs",2,"","C"],["Échalotes",3,"","F"],["Ail",2,"gousse","F"],["Kecap manis",3,"c.s.","S"],["Sambal oelek",1,"c.c.","S"],["Concombre",1,"","F"],["Tomates",1,"","F"],["Oignons nouveaux",1,"botte","F"]],
+ steps:[["La veille ou 2 h avant : cuire le riz et le laisser refroidir étalé.",0],["Wok chaud : échalotes, ail et sambal 1 min, puis le poulet en dés.",5],["Ajouter le riz froid, sauter 4 min, puis le kecap manis.",5],["Cuire les œufs au plat.",4],["Servir avec concombre, tomate et oignons nouveaux.",2]]},
+{id:"rendang",nom:"Rendang de bœuf",cuisine:"Indonésie",region:"Asie du Sud-Est",prot:"bœuf",temps:180,four:null,
+ ing:[["Paleron de bœuf",500,"g","B"],["Lait de coco",400,"ml","E"],["Échalotes",4,"","F"],["Ail",3,"gousse","F"],["Gingembre frais",1,"morceau","F"],["Citronnelle",2,"","F"],["Piment en flocons",1,"c.c.","S"],["Curcuma",1,"c.c.","S"],["Noix de coco râpée",30,"g","E"],["Sucre",1,"c.c.","E"],["Riz",150,"g","E"]],
+ steps:[["Mixer échalotes, ail, gingembre, partie tendre de la citronnelle, piment et curcuma.",8],["Torréfier la noix de coco râpée à sec jusqu’à ce qu’elle soit brune, puis la piler.",6],["Faire revenir la pâte 5 min, ajouter le bœuf, le lait de coco, la coco torréfiée, le sucre et du sel.",6],["Mijoter à découvert en remuant de plus en plus souvent, jusqu’à ce que le liquide disparaisse et que la viande caramélise. Cuire le riz.",150]]},
+{id:"bobun",nom:"Bò bún",cuisine:"Vietnam",region:"Asie du Sud-Est",prot:"bœuf",temps:35,four:null,
+ ing:[["Vermicelles de riz",150,"g","E"],["Bœuf à émincer (rumsteck)",250,"g","B"],["Citronnelle",1,"","F"],["Ail",2,"gousse","F"],["Nuoc-mâm",4,"c.s.","S"],["Sucre",2,"c.s.","E"],["Citron vert",2,"","F"],["Salade verte",1,"","F"],["Concombre",1,"","F"],["Carottes",1,"","F"],["Pousses de soja",100,"g","F"],["Cacahuètes",30,"g","E"],["Basilic",1,"botte","F"]],
+ steps:[["Mariner le bœuf avec la citronnelle hachée, l’ail, 1 c.s. de nuoc-mâm et 1 c.c. de sucre.",10],["Sauce : 3 c.s. de nuoc-mâm, le sucre, le jus des citrons verts, 6 c.s. d’eau et un peu d’ail.",3],["Cuire les vermicelles et les rincer à l’eau froide.",5],["Saisir le bœuf à feu vif.",3],["Bol : salade, concombre et carotte en julienne, soja, vermicelles, bœuf, cacahuètes, herbes et sauce.",8]]},
+{id:"laksa",nom:"Laksa au poulet et aux crevettes",cuisine:"Malaisie",region:"Asie du Sud-Est",prot:"poulet",temps:40,four:null,
+ ing:[["Pâte de curry rouge",3,"c.s.","S"],["Lait de coco",400,"ml","E"],["Bouillon de volaille",1,"cube","E"],["Filets de poulet",200,"g","B"],["Crevettes crues décortiquées",150,"g","B"],["Nouilles de riz plates",150,"g","E"],["Pousses de soja",100,"g","F"],["Tofu",100,"g","C"],["Citron vert",1,"","F"],["Coriandre fraîche",1,"botte","F"],["Œufs",2,"","C"]],
+ steps:[["Faire frire la pâte de curry 2 min, ajouter le lait de coco et 500 ml de bouillon, mijoter.",10],["Pocher le poulet émincé dans le bouillon, puis les crevettes et le tofu.",10],["Cuire les nouilles et les œufs durs.",10],["Bol : nouilles, pousses de soja, bouillon brûlant et garnitures, œuf, coriandre, citron vert.",3]]},
+// --- Europe
+{id:"lasagnes",nom:"Lasagnes à la bolognaise",cuisine:"Italie",region:"Italie rustique",prot:"bœuf",temps:145,four:180,
+ ing:[["Feuilles de lasagne",200,"g","E"],["Bœuf haché",300,"g","B"],["Tomates concassées",1,"boîte","E"],["Carottes",1,"","F"],["Branches de céleri",1,"","F"],["Oignon",1,"","F"],["Vin rouge",100,"ml","E"],["Lait",500,"ml","C"],["Beurre",40,"g","C"],["Farine",3,"c.s.","E"],["Parmesan",60,"g","C"]],
+ steps:[["Ragù : faire suer oignon, carotte et céleri hachés, ajouter le bœuf, le vin, puis les tomates. Mijoter très doucement.",60],["Béchamel : beurre, farine, lait et muscade.",10],["Monter 4 couches : ragù, pâtes, béchamel, parmesan.",15],["Cuire à 180 °C.",40],["Laisser reposer avant de couper.",10]]},
+{id:"ossobuco",nom:"Osso buco à la milanaise",cuisine:"Italie",region:"Italie rustique",prot:"veau",temps:125,four:null,
+ ing:[["Jarret de veau en tranches",2,"","B"],["Farine",2,"c.s.","E"],["Oignon",1,"","F"],["Carottes",1,"","F"],["Branches de céleri",1,"","F"],["Vin blanc",150,"ml","E"],["Tomates concassées",1,"boîte","E"],["Citron",1,"","F"],["Persil plat",1,"botte","F"],["Ail",1,"gousse","F"],["Polenta",150,"g","E"]],
+ steps:[["Fariner et dorer les tranches de jarret.",10],["Faire suer les légumes hachés, remettre la viande, réduire le vin blanc, puis ajouter les tomates.",10],["Mijoter à couvert, feu doux.",90],["Gremolata : zeste de citron, persil et ail hachés.",3],["Préparer la polenta.",10]]},
+{id:"schnitzel",nom:"Wiener Schnitzel au four",cuisine:"Autriche",region:"Europe centrale & du Nord",prot:"veau",temps:40,four:220,
+ ing:[["Escalopes de veau",2,"","B"],["Farine",2,"c.s.","E"],["Œufs",1,"","C"],["Chapelure",80,"g","E"],["Citron",1,"","F"],["Pommes de terre",400,"g","F"],["Vinaigre de vin",2,"c.s.","S"],["Oignon rouge",1,"","F"]],
+ steps:[["Salade : cuire les pommes de terre, les trancher tièdes, assaisonner de vinaigre, d’oignon rouge et de sel.",25],["Aplatir les escalopes à 4 mm.",3],["Paner farine, œuf, chapelure, sans tasser.",5],["Cuire sur une plaque bien chaude et généreusement huilée à 220 °C, en retournant.",12],["Servir avec des quartiers de citron.",0]]},
+{id:"rosti",nom:"Rösti et œuf au plat",cuisine:"Suisse",region:"Europe centrale & du Nord",prot:"œufs",temps:50,four:220,
+ ing:[["Pommes de terre",700,"g","F"],["Beurre",30,"g","C"],["Œufs",2,"","C"],["Gruyère râpé",60,"g","C"],["Salade verte",1,"","F"]],
+ steps:[["Râper grossièrement les pommes de terre et les essorer très fort dans un torchon.",10],["Saler, mélanger au beurre fondu et étaler en galette épaisse dans une poêle allant au four bien chaude.",5],["Dorer le dessous, puis enfourner à 220 °C.",30],["Retourner sur une assiette, parsemer de gruyère, servir avec les œufs au plat.",5]]},
+{id:"kottbullar",nom:"Köttbullar, boulettes suédoises",cuisine:"Suède",region:"Europe centrale & du Nord",prot:"bœuf",temps:50,four:200,
+ ing:[["Bœuf haché",200,"g","B"],["Porc haché",200,"g","B"],["Chapelure",3,"c.s.","E"],["Lait",250,"ml","C"],["Oignon",1,"","F"],["Œufs",1,"","C"],["Bouillon de volaille",1,"cube","E"],["Crème fraîche",100,"ml","C"],["Farine",1,"c.s.","E"],["Pommes de terre",500,"g","F"],["Confiture d’airelles",2,"c.s.","E"]],
+ steps:[["Faire tremper la chapelure dans 50 ml de lait, mélanger avec les viandes, l’oignon râpé, l’œuf, sel et poivre.",10],["Former des boulettes de 3 cm et les cuire à 200 °C sur plaque. Cuire les pommes de terre.",20],["Sauce : farine dans le jus, 200 ml de bouillon, le reste du lait et la crème, réduire.",8],["Servir avec purée ou pommes de terre et airelles.",2]]},
+{id:"stroganoff",nom:"Bœuf Stroganoff",cuisine:"Russie",region:"Europe centrale & du Nord",prot:"bœuf",temps:30,four:null,
+ ing:[["Bœuf à émincer (rumsteck)",350,"g","B"],["Champignons de Paris",250,"g","F"],["Oignon",1,"","F"],["Moutarde",1,"c.s.","S"],["Crème fraîche",150,"ml","C"],["Paprika",1,"c.c.","S"],["Bouillon de volaille",1,"cube","E"],["Tagliatelles",200,"g","E"]],
+ steps:[["Saisir le bœuf en lanières à feu très vif, en deux fois, et réserver.",5],["Faire revenir l’oignon et les champignons.",8],["Ajouter paprika, moutarde, 150 ml de bouillon et la crème, réduire. Cuire les pâtes.",10],["Remettre le bœuf juste pour le réchauffer.",2]]},
+{id:"shepherd",nom:"Shepherd’s pie",cuisine:"Royaume-Uni",region:"Îles britanniques",prot:"agneau",temps:75,four:200,
+ ing:[["Agneau haché",400,"g","B"],["Oignon",1,"","F"],["Carottes",2,"","F"],["Petits pois (surgelés ou boîte)",100,"g","E"],["Concentré de tomate",1,"c.s.","E"],["Sauce Worcestershire",1,"c.s.","S"],["Bouillon de volaille",1,"cube","E"],["Pommes de terre",700,"g","F"],["Lait",100,"ml","C"],["Beurre",30,"g","C"],["Cheddar râpé",50,"g","C"]],
+ steps:[["Purée : cuire les pommes de terre et les écraser avec lait et beurre.",25],["Dorer l’agneau, ajouter oignon et carottes en dés, concentré, Worcestershire et 200 ml de bouillon, mijoter.",20],["Ajouter les petits pois, verser dans le plat, couvrir de purée striée à la fourchette et de cheddar.",5],["Gratiner à 200 °C.",25]]},
+{id:"irishstew",nom:"Irish stew",cuisine:"Irlande",region:"Îles britanniques",prot:"agneau",temps:140,four:null,
+ ing:[["Épaule d’agneau",600,"g","B"],["Pommes de terre",600,"g","F"],["Carottes",3,"","F"],["Oignon",2,"","F"],["Bouillon de volaille",1,"cube","E"],["Herbes de Provence",1,"c.c.","S"],["Persil plat",1,"botte","F"]],
+ steps:[["Dorer légèrement l’agneau en morceaux.",10],["En couches dans la cocotte : pommes de terre, agneau, oignons, carottes, herbes et sel. Finir par des pommes de terre.",10],["Mouiller de bouillon à hauteur, couvrir et mijoter très doucement.",110],["Parsemer de persil.",0]]},
+{id:"bacalhau",nom:"Bacalhau à Brás",cuisine:"Portugal",region:"Espagne & Portugal",prot:"poisson",temps:45,four:220,veille:true,
+ ing:[["Morue salée",300,"g","B"],["Pommes de terre",400,"g","F"],["Oignon",2,"","F"],["Ail",2,"gousse","F"],["Œufs",4,"","C"],["Olives noires",40,"g","E"],["Persil plat",1,"botte","F"]],
+ steps:[["La veille : dessaler la morue 24 h dans l’eau froide, en changeant l’eau 3 ou 4 fois.",0],["Pocher la morue 5 min et l’effeuiller.",8],["Couper les pommes de terre en allumettes très fines, les huiler et les rôtir à 220 °C jusqu’à ce qu’elles croustillent.",25],["Faire fondre oignons et ail, ajouter morue et pommes de terre, puis les œufs battus hors du feu : ils doivent rester crémeux.",8],["Ajouter olives et persil.",0]]},
+{id:"albondigas",nom:"Albóndigas en sauce tomate",cuisine:"Espagne",region:"Espagne & Portugal",prot:"bœuf",temps:50,four:220,
+ ing:[["Bœuf haché",200,"g","B"],["Porc haché",200,"g","B"],["Chapelure",3,"c.s.","E"],["Œufs",1,"","C"],["Ail",2,"gousse","F"],["Persil plat",1,"botte","F"],["Tomates concassées",1,"boîte","E"],["Oignon",1,"","F"],["Vin blanc",100,"ml","E"],["Paprika fumé",1,"c.c.","S"],["Pain de campagne",1,"","P"]],
+ steps:[["Mélanger les viandes, la chapelure, l’œuf, l’ail et le persil hachés, du sel. Former des boulettes.",12],["Les dorer au four à 220 °C.",12],["Sauce : oignon, paprika, vin à réduire, puis tomates, mijoter.",15],["Ajouter les boulettes et mijoter ensemble.",15]]}
+];
+const DETAIL3={
+pozole:[20,55,2,"Grande marmite, mixeur, passoire","Filtrer la sauce de piments donne un bouillon rouge velouté, sans peaux.","Tostadas et garnitures fraîches à table.","3 jours au frais, se congèle sans les garnitures."],
+tinga:[10,30,1,"Casserole, sauteuse, plaque","La feta remplace le queso fresco mexicain, rare en France.","Crème, oignon rouge mariné.","Tinga 3 jours ; tostadas au moment."],
+cochinita:[20,180,2,"Cocotte allant au four, papier alu","Fermez hermétiquement (alu sous le couvercle) : la viande cuit à l’étouffée, comme dans le four en terre du Yucatán.","Oignons rouges marinés ; piment habanero pour les courageux.","4 jours, se congèle."],
+ropavieja:[20,130,1,"Cocotte, sauteuse, deux fourchettes","Effilochez dans le sens des fibres : les longs fils absorbent la sauce.","Riz blanc, haricots noirs, plantain rôti.","4 jours, meilleure réchauffée."],
+griot:[70,50,2,"Cocotte, plaque, bocal","D’abord braiser, puis rôtir : la viande reste fondante dedans et croustille dehors, sans friture.","Pikliz, riz collé aux pois, bananes pesées.","Porc 3 jours ; pikliz 2 semaines au frais."],
+ceviche:[15,20,1,"Saladier en verre, casserole, couteau bien aiguisé","Le poisson ne « cuit » que quelques minutes dans le citron : au-delà, il devient caoutchouteux. Prenez-le très frais, qualité sashimi.","Patate douce et maïs, comme à Lima.","À manger tout de suite."],
+ajidegallina:[15,40,2,"Casserole, poêle, mixeur","Sans ají amarillo, 1 c.c. de curcuma et une pointe de piment donnent la couleur, mais pas tout à fait le goût. Cherchez-le en épicerie latine.","Riz blanc, pommes de terre.","3 jours au frais."],
+empanadas:[30,30,2,"Poêle, plaque, emporte-pièce ou bol","La farce doit être froide avant de garnir, sinon la pâte ramollit et se déchire.","Salade verte, sauce chimichurri.","3 jours ; se congèlent crues ou cuites."],
+moqueca:[20,20,1,"Cocotte large avec couvercle, casserole","Ne remuez pas : secouez simplement la cocotte, le poisson reste entier.","Riz blanc, et farofa (farine de manioc grillée) si vous en trouvez.","1 jour au frais."],
+arepas:[15,25,1,"Poêle, plaque, saladier","Seule la farine de maïs précuite (type P.A.N.) fonctionne : polenta ou farine de maïs classique ne se tiennent pas.","Hogao (sauce tomate-oignon).","Pâte 1 jour au frais ; arepas cuites, réchauffées au grille-pain."],
+bandeja:[20,75,2,"Plaque, casserole, poêles","Le plantain doit être bien mûr (peau noire) pour caraméliser au four.","Une arepa et un verre d’aguapanela.","Haricots et hogao 3 jours ; le reste se mange tout de suite."],
+pasteldechoclo:[20,55,1,"Poêle, casserole, mixeur, plat à gratin","Le voile de sucre sur le maïs caramélise au four : c’est la signature chilienne.","Ensalada chilena (tomate, oignon).","3 jours au frais."],
+patechinois:[15,45,1,"Casserole, poêle, plat à gratin","Au Québec, on mélange souvent maïs en grains et maïs en crème : moitié-moitié si vous trouvez les deux.","Ketchup ou betteraves marinées.","3 jours, se congèle."],
+macncheese:[10,35,1,"Casserole, plat à gratin, fouet","Ajoutez le cheddar hors du feu pour qu’il ne graine pas ; un cheddar affiné donne plus de goût.","Salade de chou ou brocoli vapeur.","3 jours, se réchauffe avec un trait de lait."],
+jollof:[15,55,2,"Cocotte à fond épais, mixeur, plaque","Le fond légèrement attaché, le « party rice », est recherché : laissez-le se former sans remuer.","Plantain rôti, salade de chou.","3 jours, se congèle."],
+thieboudienne:[20,70,3,"Grande cocotte, mortier","Le xooñ, le riz légèrement gratiné au fond de la marmite, est la partie la plus disputée.","Tamarin ou citron vert à part.","2 jours au frais."],
+dorowat:[20,80,2,"Cocotte","Les oignons cuits d’abord sans matière grasse, longuement, font l’épaisseur de la sauce : ne les pressez pas.","Injera (galette de teff) en épicerie africaine, sinon riz ou pain.","3 jours, meilleur réchauffé."],
+bobotie:[15,50,1,"Poêle, plat à gratin, fouet","Le flan aux œufs doit être juste pris et doré : c’est lui qui tient le plat.","Riz jaune, chutney, banane en rondelles.","3 jours au frais."],
+piripiri:[35,40,1,"Plaque, mixeur","Les entailles dans la chair laissent la marinade pénétrer jusqu’à l’os.","Riz, salade, sauce piri-piri en plus.","3 jours au frais."],
+koshari:[15,45,1,"Plaque, trois casseroles","Le vinaigre de la sauce tomate réveille tout le plat : n’hésitez pas.","Tel quel ; sauce ail-vinaigre en plus.","3 jours ; oignons gardés à part."],
+ghormeh:[25,125,2,"Cocotte, poêle","Faites frire les herbes longtemps, jusqu’à ce qu’elles soient vert foncé : c’est ce qui donne son goût profond au ghormeh.","Riz au safran avec tahdig (croûte dorée).","4 jours, meilleur réchauffé."],
+fesenjan:[15,75,2,"Cocotte, mixeur","Goûtez à la fin : la sauce doit être aigre-douce et brun foncé, ajustez mélasse ou sucre.","Riz basmati.","4 jours au frais."],
+chkmeruli:[10,45,1,"Plat à four, casserole","Il faut vraiment beaucoup d’ail : c’est un plat d’ail à la crème, pas un poulet à la crème.","Pain pour saucer.","2 jours au frais."],
+khachapuri:[90,20,2,"Saladier, plaque","À table, on mélange jaune, beurre et fromage à la fourchette, et on y trempe les bords de pâte.","Salade de tomates et concombre.","À manger chaud, tout de suite."],
+imambayildi:[20,65,1,"Plaque, poêle, plat à gratin","Se mange tiède ou froid : c’est même meilleur le lendemain.","Yaourt et pain pita.","3 jours au frais."],
+gemista:[30,60,2,"Plat à gratin, mixeur","Ne remplissez qu’aux trois quarts : le riz cru gonfle en cuisant.","Feta et pain.","3 jours ; bon froid."],
+spanakopita:[30,40,2,"Moule, pinceau","Essorez les épinards à fond, sinon la filo du fond détrempe.","Salade grecque, tzatziki.","2 jours ; réchauffer au four pour garder le croustillant."],
+butterchicken:[35,40,1,"Plaque, sauteuse, mixeur","Griller le poulet avant de le mettre en sauce donne le goût fumé du four tandoor.","Riz basmati et naan.","3 jours, se congèle."],
+chanamasala:[10,25,1,"Sauteuse, casserole","Dorez bien l’oignon : c’est la base de la couleur et du goût de la sauce.","Riz ou naan, yaourt.","4 jours, se congèle."],
+palakpaneer:[10,25,1,"Casserole, poêle, mixeur","L’eau glacée après blanchiment garde le vert éclatant des épinards.","Naan ou riz.","2 jours au frais."],
+momos:[30,20,2,"Panier vapeur (ou passoire sur casserole), poêle","Une petite cuillère de farce par momo, pas plus, sinon ils s’ouvrent.","Achar de tomate pimenté.","Crus, ils se congèlent à plat sur une plaque."],
+aloogobi:[10,35,1,"Plaque, saladier","Au four plutôt qu’à la poêle : le chou-fleur caramélise au lieu de bouillir.","Naan, raïta.","3 jours au frais."],
+kungpao:[15,15,2,"Wok, casserole","Le piment ne doit pas noircir : 20 secondes suffisent pour parfumer l’huile.","Riz blanc.","2 jours au frais."],
+aigredoux:[15,30,1,"Plaque, wok, bol","Mélangez le porc à la sauce au dernier moment pour garder le croustillant.","Riz blanc.","2 jours (le croustillant se perd)."],
+katsu:[15,40,2,"Plaque avec grille, casserole, poêle","Dorez le panko à sec avant de paner : il reste blond et croustillant au four, comme en friture.","Riz japonais, pickles.","Sauce 3 jours ; katsu au moment."],
+okonomiyaki:[10,25,2,"Grande poêle avec couvercle, saladier","Retournez d’un geste franc avec deux spatules, et gardez un feu moyen pour que le centre cuise.","Bonite séchée et algue nori si vous en trouvez.","À manger tout de suite."],
+japchae:[15,25,2,"Wok, casserole","Sautez les légumes séparément : couleurs et textures restent nettes.","Riz et kimchi.","2 jours ; bon froid."],
+dakgalbi:[15,20,1,"Grande poêle ou wok","En Corée, on finit en faisant sauter le riz restant dans la sauce, au fond de la poêle.","Riz, feuilles de salade pour faire des wraps.","2 jours au frais."],
+padthai:[15,15,2,"Wok, saladier","Les nouilles doivent rester un peu fermes après trempage : elles finissent de cuire dans la sauce.","Citron vert, piment et cacahuètes à table.","À manger tout de suite."],
+massaman:[15,105,1,"Cocotte, casserole","Le massaman doit être doux, sucré et à peine piquant : ajustez avec sucre et tamarin.","Riz jasmin.","4 jours, se congèle."],
+nasigoreng:[10,15,1,"Wok, poêle","Riz froid obligatoire : chaud, il colle et devient pâteux.","Œuf au plat, chips de crevettes.","1 jour au frais."],
+rendang:[20,160,3,"Cocotte à fond épais, mixeur","Le rendang est prêt quand la sauce a totalement réduit et que la viande frit doucement dans l’huile de coco : brun foncé, presque sec.","Riz blanc.","5 jours, encore meilleur réchauffé."],
+bobun:[20,15,1,"Wok, casserole, bols","La sauce doit équilibrer salé, sucré et acide : goûtez et ajustez.","Nems au four si vous en trouvez.","Éléments séparés 2 jours."],
+laksa:[15,25,2,"Casserole, sauteuse, bols","Versez le bouillon brûlant directement sur les nouilles et le soja.","Sambal à part.","Bouillon 2 jours ; nouilles au moment."],
+lasagnes:[30,115,2,"Cocotte, casserole, plat à gratin","Un ragù mijoté longtemps à feu très doux fait toute la différence ; deux heures, c’est encore mieux.","Salade de roquette.","3 jours, se congèle."],
+ossobuco:[20,105,2,"Cocotte large","La moelle de l’os est le meilleur morceau : prévoyez une petite cuillère.","Polenta ou risotto au safran.","3 jours au frais."],
+schnitzel:[15,25,1,"Plaque, rouleau ou casserole pour aplatir, assiettes creuses","Ne tassez pas la chapelure : elle doit onduler en cuisant.","Salade de pommes de terre, airelles.","À manger tout de suite."],
+rosti:[15,35,2,"Poêle allant au four, râpe, torchon","Essorez à fond : c’est l’eau qui empêche le rösti de croustiller.","Œuf au plat et salade ; ou un émincé de veau à la zurichoise.","À manger tout de suite."],
+kottbullar:[20,30,1,"Plaque, sauteuse, casserole","Mains mouillées et boulettes de même taille pour une cuisson égale.","Purée, airelles, concombre au vinaigre.","3 jours, se congèlent."],
+stroganoff:[10,20,1,"Grande poêle, casserole","Le bœuf ne doit pas recuire dans la sauce, il durcirait : réchauffez-le juste.","Tagliatelles, riz ou pommes de terre.","2 jours au frais."],
+shepherd:[20,55,1,"Casserole, poêle, plat à gratin","Striez la purée à la fourchette : les sillons dorent et croustillent.","Petits pois au beurre.","3 jours, se congèle."],
+irishstew:[20,120,1,"Cocotte","Une partie des pommes de terre se défait et épaissit naturellement le bouillon.","Pain irlandais (soda bread).","4 jours, meilleur réchauffé."],
+bacalhau:[15,30,2,"Poêle, plaque, casserole","Ajoutez les œufs hors du feu en remuant : la texture doit rester baveuse, pas devenir une omelette.","Salade verte.","1 jour au frais."],
+albondigas:[15,35,1,"Plaque, sauteuse","Un paprika fumé espagnol (pimentón de la Vera) donne tout l’accent.","Pain, ou riz.","3 jours, se congèlent."]
+};
+W3.forEach(r=>{r.zone="Monde";r.terroir=true});
+TERROIR.push(...W3);
+
 R.push(...TERROIR);
 const REGIONS=[...new Set(TERROIR.map(r=>r.region))];
 
@@ -1327,6 +1578,18 @@ function nutFor(name){
   const e=NUTRI.find(([re])=>re.test(n));NUT_CACHE.set(n,e);return e;
 }
 // Par portion. Les recettes sont écrites pour 2 ; on ajoute 15 g d'huile de cuisson pour 2 (≈ 1 c.s.).
+
+NUTRI.unshift(
+[/maïs pozole/,[70,2,14,1],{w:{"boîte":400}}],[/guajillo/,[300,12,50,6],{u:5}],[/achiote/,[400,4,40,25]],[/poisson blanc/,[85,18,0,1]],
+[/ají amarillo|piment jaune/,[60,1,8,2]],[/noix de coco/,[660,7,24,62]],[/^noix/,[650,15,7,65]],[/levure/,[300,40,40,5],{w:{sachet:8}}],
+[/filo/,[300,8,60,3],{u:250}],[/paneer/,[320,20,3,25]],[/gyoza/,[280,9,57,1],{u:8}],[/chou-fleur/,[25,2,3,0.3],{u:600}],
+[/cacahuètes/,[580,25,12,49]],[/ananas/,[55,0.4,13,0.1],{w:{"boîte":230}}],[/ketchup/,[110,1.5,25,0.2],{w:{"c.s.":17}}],
+[/mayonnaise/,[700,1,1,77]],[/pousses de soja/,[30,3,4,0.2]],[/citronnelle/,[30,1,6,0.5],{u:20}],[/lasagne/,[355,12.5,71,1.5]],
+[/jarret de veau/,[140,20,0,6],{u:300}],[/escalopes de veau/,[110,22,0,2],{u:130}],[/gruyère/,[400,28,0,32]],[/airelles/,[250,0.3,60,0],{w:{"c.s.":20}}],
+[/morue/,[110,25,0,1]],[/mélasse/,[270,0,67,0],{w:{"c.s.":20}}],[/chutney/,[230,0.5,57,0],{w:{"c.s.":20}}],[/raisins secs/,[300,3,70,0.5]],
+[/radis/,[15,1,2,0.1],{u:15}],[/kecap/,[280,3,65,0],{w:{"c.s.":18}}],[/tamarin/,[240,3,60,0.5]],[/worcestershire/,[80,1,19,0]],[/citrons séchés/,[30,1,6,0.5],{u:8}]
+);
+NUT_CACHE.clear();
 function nutrition(r){
   if(r._nut)return r._nut;
   let k=0,p=0,g=0,l=0;
@@ -1340,7 +1603,7 @@ function nutrition(r){
   r._nut=o;return o;
 }
 
-R.forEach(r=>{const d=DETAIL[r.id]||DETAIL2[r.id];if(d)r.d={prep:d[0],cuis:d[1],diff:d[2],ust:d[3],astuce:d[4],service:d[5],conserv:d[6]}});
+R.forEach(r=>{const d=DETAIL[r.id]||DETAIL2[r.id]||DETAIL3[r.id];if(d)r.d={prep:d[0],cuis:d[1],diff:d[2],ust:d[3],astuce:d[4],service:d[5],conserv:d[6]}});
 
 const FRIGO=[
  {k:"poulet",l:"Poulet",t:["poulet"]},{k:"boeuf",l:"Bœuf haché",t:["bœuf haché"]},{k:"oeufs",l:"Œufs",t:["œufs"]},
@@ -1392,13 +1655,15 @@ ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'
 };
 const icon=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 
-function fresh(){return{p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
+function fresh(){return{hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
 function normalize(o){
   const s=fresh();if(!o||typeof o!=="object")return s;
   if(Number.isInteger(o.p))s.p=Math.min(8,Math.max(1,o.p));
   ["done","notes"].forEach(k=>{if(o[k]&&typeof o[k]==="object")s[k]=o[k]});
   ["frigo","extras","fav","ban"].forEach(k=>{if(Array.isArray(o[k]))s[k]=o[k].filter(x=>typeof x==="string")});
   if(Array.isArray(o.mine))s.mine=o.mine.filter(r=>r&&r.id&&r.nom&&Array.isArray(r.ing)&&Array.isArray(r.steps));
+  s.mine.forEach(r=>{if(r.dd&&!r.d)Object.defineProperty(r,"d",{value:r.dd,enumerable:false,writable:true})});
+  if(o.hidden&&typeof o.hidden==="object")s.hidden=o.hidden;
   if(o.cfg&&typeof o.cfg==="object")s.cfg={quick:!!o.cfg.quick,fish:!!o.cfg.fish,veg:Math.min(4,Math.max(0,+o.cfg.veg||0))};
   if(Array.isArray(o.week)&&o.week.length===7)s.week=o.week.map(x=>typeof x==="string"||x===null?{d:x,x2:false}:{d:x&&x.d||null,x2:!!(x&&x.x2),...(Number.isInteger(x&&x.p)&&x.p>=1&&x.p<=12?{p:x.p}:{})});
   return s;
@@ -1462,7 +1727,7 @@ function generate(){
   const days=shuffle([0,1,2,3,4,5,6]);
   req.forEach((c,j)=>{arr[days[j]]=pickFor(days[j],arr,c)});
   for(let i=0;i<7;i++)if(!arr[i])arr[i]=pickFor(i,arr,"meat");
-  S.week=arr.map(d=>({d,x2:false}));S.done={};save();render();toast("Nouvelle semaine générée");
+  S.week=arr.map(d=>({d,x2:false}));S.done={};S.hidden={};save();render();toast("Nouvelle semaine générée");
 }
 function shopping(){
   const map=new Map(),f=factor();
@@ -1474,6 +1739,8 @@ function shopping(){
   S.extras.forEach((e,i)=>map.set("x|"+e,{k:"x|"+e,nom:e,q:null,u:"",ray:"X",from:[],extra:i}));
   const items=[...map.values()];
   items.forEach(it=>it.home=it.ray!=="X"&&matchesFrigo(it.nom));
+  shopping.hiddenCount=items.filter(it=>S.hidden&&S.hidden[it.k]).length;
+  return items.filter(it=>!(S.hidden&&S.hidden[it.k]));
   return items;
 }
 const COMMON=new Set(["Ail","Oignon","Oignon rouge","Riz","Bouquet garni"]);
@@ -1527,6 +1794,7 @@ const FOOD=[
  [/aubergine/,"#4e2d52"],[/haricots noirs|haricots rouges/,"#5a2e2a"],[/olive|câpres/,"#5b5a35"],[/champignon/,"#a88b6a"],
  [/feta|yaourt|mozzarella|crème|fromage|parmesan|cheddar|emmental|reblochon|tomme|houmous|lait de coco/,"#f6f1e4"]
 ];
+FOOD.push([/poisson blanc|morue/,"#efe9dc"],[/paneer/,"#f3ead2"],[/noix|cacahuète/,"#b07a3e"],[/chou-fleur/,"#efe6cf"],[/ananas/,"#f2c94c"],[/pousses/,"#efe3c9"],[/achiote|guajillo|berbéré|gochujang|curry rouge|massaman/,"#b8452e"]);
 const STARCH=/riz|semoule|pâte|penne|orecchiette|nouilles|pommes de terre|gnocchi|polenta|pain|tortilla|macaroni|haricots blancs|cannellini|pois chiches|borlotti|choucroute|farine/;
 FOOD.push([/plantain|banane/,"#e9cf45"],[/tofu/,"#f3ead2"],[/endive|frisée/,"#cfdc8a"],[/manioc/,"#efe3c9"],[/magret|canard/,"#8e3b2b"],[/pruneau/,"#4a2a33"],[/cacahuète/,"#b07a3e"]);
 function plateColors(r){
@@ -1604,6 +1872,8 @@ function viewCourses(){
     <div class="row" style="flex-wrap:nowrap"><button class="btn wide" id="copy">${icon("copy")}Copier la liste</button><button class="iconbtn" id="uncheck" aria-label="Tout décocher">${icon("reset")}</button></div>
     ${addForm()}
     ${groups}
+    ${shopping.hiddenCount?`<button class="btn ghost small" id="restoreHidden">Réafficher ${shopping.hiddenCount} article${shopping.hiddenCount>1?"s":""} retiré${shopping.hiddenCount>1?"s":""}</button>`:""}
+    <p class="note">Glissez un article vers la gauche pour le retirer.</p>
     <p class="note">Pour ${S.p} personne${S.p>1?"s":""} par défaut${S.week.some(w=>w.d&&w.p&&w.p!==S.p)?", avec les jours ajustés":""}${x2?`, doublé pour ${x2} dîner${x2>1?"s":""} avec restes`:""}. Huile, sel et poivre non listés.</p>
   </div>`;
 }
@@ -1651,14 +1921,14 @@ function listHTML(){
 }
 const pickBanner=()=>UI.pick!=null?`<div class="banner"><span>Dîner de <strong>${JOURS[UI.pick]}</strong> : touchez une recette</span><button class="btn ghost small" id="cancelPick">Annuler</button></div>`:"";
 function viewRecettes(){
-  return `<div class="view">${pickBanner()}${UI.pick==null?fridgeCta():""}
+  return `<div class="view">${pickBanner()}${UI.pick==null?fridgeCta()+aiCard():""}
     <div class="searchbar"><div class="searchwrap">${icon("search")}<input type="search" id="search" placeholder="Recette, ingrédient, région…" value="${esc(UI.q)}" aria-label="Rechercher" autocomplete="off"></div>
       <div class="chips scroll" role="group" aria-label="Filtres">${FILTERS.map(c=>`<button class="chip" data-filter="${esc(c)}" aria-pressed="${UI.filter===c}">${c==="Favoris"?"★ Favoris":esc(c)}</button>`).join("")}</div></div>
     <div class="rlist" id="rlist">${listHTML()}</div></div>`;
 }
 function viewTerroirs(){
   const regs=REGIONS.filter(rg=>TERROIR.find(r=>r.region===rg).zone===UI.zone);
-  return `<div class="view">${pickBanner()}
+  return `<div class="view">${pickBanner()}${UI.pick==null?aiCard():""}
     <div class="seg" role="group" aria-label="Zone"><button data-zone="France" aria-pressed="${UI.zone==="France"}">France</button><button data-zone="Monde" aria-pressed="${UI.zone==="Monde"}">Monde</button></div>
     <div class="chips scroll">${regs.map((rg,i)=>`<button class="chip" data-jump="reg${i}">${esc(rg)}</button>`).join("")}</div>
     <p class="note">Plats rustiques, souvent mijotés : idéals le week-end, et meilleurs réchauffés avec l’option restes du midi.</p>
@@ -1685,7 +1955,7 @@ function openRecipe(id,tab){
       <div class="shero-main"><h2>${esc(r.nom)}</h2>${orb(r,"lg")}</div>
       <div class="facts big"><span>${icon("clock")}${fmtT(r.temps)}</span><span>${icon("flame")}${r.four?r.four+" °C":"Sans four"}</span><span>${icon("fire2")}${nutrition(r).kcal} kcal</span><span>${icon(r.prot==="poisson"?"fish":isVeg(r)?"leaf":"jar")}${esc(r.prot)}</span></div>
       <div class="vstep" role="group" aria-label="Nombre de personnes pour cette recette"><span>Pour</span><button id="vpMinus" aria-label="Une personne de moins">−</button><b id="vpOut">${UI.viewP}</b><button id="vpPlus" aria-label="Une personne de plus">+</button><span>personne${UI.viewP>1?"s":""}</span></div></div>
-    ${r.gen?`<div class="genbar"><span class="note">Idée générée depuis votre photo${r.manque.length?" · il manque : "+esc(r.manque.join(", ")):""}</span><div class="row" style="gap:6px"><button class="btn ghost small" id="backFridge">← Idées</button>${r.manque.length?`<button class="btn ghost small" data-addmiss="${esc(id)}">${icon("cart")}Manquants aux courses</button>`:""}<button class="btn small" data-savegen="${esc(id)}">Enregistrer</button></div></div>`:""}
+    ${r.gen?`<div class="genbar"><span class="note">${r.ai?(r.futur?"Recette inventée par Claude":"Recette écrite par Claude à votre demande")+" · pas encore enregistrée":"Idée générée depuis votre photo"}${r.manque.length?" · il manque : "+esc(r.manque.join(", ")):""}</span><div class="row" style="gap:6px">${r.ai?"":`<button class="btn ghost small" id="backFridge">← Idées</button>`}${r.manque.length?`<button class="btn ghost small" data-addmiss="${esc(id)}">${icon("cart")}Manquants aux courses</button>`:""}<button class="btn small" data-savegen="${esc(id)}">Enregistrer</button></div></div>`:""}
     <div class="group"><span class="label">Mettre au menu</span><div class="week7">${days}</div></div>
     <div class="seg" role="group" aria-label="Sections"><button data-stab="ing" aria-pressed="${UI.sheetTab==="ing"}">Ingrédients</button><button data-stab="steps" aria-pressed="${UI.sheetTab==="steps"}">Étapes</button><button data-stab="more" aria-pressed="${UI.sheetTab==="more"}">Plus</button></div>
     <div id="stab">${sheetTab(r)}</div>`,r.nom);
@@ -1845,6 +2115,7 @@ const FR={ok:false,sample:null,max:3,maxBytes:20e6,files:[],urls:[],opts:{quick:
   try{
     if(!window.claude||typeof window.claude.use!=="function")return;
     const s=await window.claude.use("sample");if(!s)return;
+    AI.sample=s;AI.ok=true;if(UI.tab==="terroirs"||UI.tab==="recettes")render();
     const lim=await s.limits().catch(()=>null);if(!lim||!lim.images)return;
     FR.sample=s;FR.max=Math.max(1,Math.min(4,lim.images.maxCount||1));FR.maxBytes=lim.images.maxInputBytes||20e6;FR.ok=true;
     if(UI.tab==="semaine"||UI.tab==="recettes")render();
@@ -1965,7 +2236,7 @@ ${catalog}`;
 }
 function saveGen(id){
   const g=(GEN||[]).find(r=>r.id===id);if(!g)return id;
-  const r={id:"m"+Date.now(),mine:true,nom:g.nom,cuisine:g.cuisine,prot:g.prot,temps:g.temps,four:g.four,ing:g.ing.map(x=>x.slice(0,4)),steps:g.steps};
+  const r={id:"m"+Date.now(),mine:true,nom:g.nom,cuisine:g.cuisine,prot:g.prot,temps:g.temps,four:g.four,ing:g.ing.map(x=>x.slice(0,4)),steps:g.steps,...(g.d?{dd:g.d}:{})};if(r.dd)Object.defineProperty(r,"d",{value:r.dd,enumerable:false,writable:true});
   S.mine.push(r);GEN=GEN.filter(x=>x.id!==id);
   if(FR.result){FR.result.recipes=FR.result.recipes.filter(x=>x.id!==id);if(!FR.result.catalog.includes(r.id))FR.result.catalog.unshift(r.id)}
   save();return r.id;
@@ -2022,6 +2293,89 @@ document.addEventListener("touchend",()=>{
   else if(Math.abs(d.dx)>60&&(d.ady||0)<50){cookGo(UI.cook.i+(d.dx<0?1:-1))}
 });
 
+
+/* ---------- Recettes à la demande : n'importe quel plat du monde, ou inventé ---------- */
+const AI={ok:false,sample:null,mode:"monde",q:"",status:"idle",err:"",ctl:null};
+const AI_SUG=["Feijoada","Phở bò","Tajine de poisson","Mole poblano","Bigos polonais","Sarmale roumains","Plov ouzbek","Cachupa","Chili végétarien","Curry de Ceylan"];
+const AI_FUT=["Ramen fumé au thé","Tacos bleus spiruline","Bol cosmique miso-coco","Lasagnes en spirale","Poulet glacé au yuzu"];
+function aiCard(){
+  if(!AI.ok)return"";
+  const sug=AI.mode==="futur"?AI_FUT:AI_SUG,busy=AI.status==="busy";
+  return `<section class="aicard"><div class="ai-head"><span class="ai-ic">${icon("sparkle")}</span><div><b>${AI.mode==="futur"?"Cuisine inimaginable":"Toutes les cuisines du monde"}</b><span>${AI.mode==="futur"?"Claude invente un plat qui n’existe pas encore, faisable chez vous.":"Un plat, un pays, une région : Claude écrit la recette complète."}</span></div></div>
+    <div class="seg" role="group" aria-label="Mode"><button data-aimode="monde" aria-pressed="${AI.mode==="monde"}">Tradition</button><button data-aimode="futur" aria-pressed="${AI.mode==="futur"}">Inimaginable</button></div>
+    <form class="addrow" id="aiForm"><input type="text" id="aiq" value="${esc(AI.q)}" placeholder="${AI.mode==="futur"?"Une idée folle, une envie, un ingrédient…":"Ex. pho, plat géorgien, cuisine de Bogotá…"}" maxlength="120" autocomplete="off" aria-label="Plat ou pays" ${busy?"disabled":""}><button class="btn small" type="submit" ${busy?"disabled":""}>Créer</button></form>
+    ${busy?`<div class="busy"><span class="spinner" aria-hidden="true"></span><div><b>Claude écrit la recette…</b><br><span class="note">20 à 60 secondes.</span></div><button class="btn ghost small" id="aiStop">Arrêter</button></div>`
+      :`<div class="chips scroll">${sug.map(x=>`<button class="chip" data-aisug="${esc(x)}">${esc(x)}</button>`).join("")}</div>`}
+    ${AI.status==="error"?`<p class="err">${esc(AI.err)}</p>`:""}
+    ${GEN.filter(r=>r.ai).length?`<div class="rlist">${GEN.filter(r=>r.ai).slice(-3).reverse().map(r=>`<button class="simbtn" data-open="${esc(r.id)}"><b>${esc(r.nom)}</b><span>${esc(r.cuisine)} · ${fmtT(r.temps).replace(/ /g," ")} · ${nutrition(r).kcal} kcal · non enregistrée</span></button>`).join("")}</div>`:""}
+  </section>`;
+}
+async function runAI(q){
+  if(!AI.sample||AI.status==="busy")return;q=String(q||"").trim().slice(0,120);if(!q){AI.status="error";AI.err="Tapez un plat, un pays ou une idée.";return render()}
+  AI.q=q;AI.status="busy";AI.err="";render();AI.ctl=new AbortController();
+  const fut=AI.mode==="futur";
+  const prompt=`${fut?`Invente une recette de dîner originale et futuriste, inspirée de : « ${q} ». Elle doit être créative (associations inattendues, textures, couleurs) mais entièrement réalisable dans une cuisine ordinaire, avec des ingrédients trouvables en France (supermarché ou épicerie spécialisée). Donne-lui un nom évocateur.`:`Donne la recette authentique et traditionnelle correspondant à : « ${q} ». Si c'est un pays ou une région, choisis un de ses plats emblématiques. Reste fidèle à la tradition ; si un ingrédient est introuvable en France, propose le substitut le plus proche dans le nom de l'ingrédient.`}
+Privilégie la cuisson au four quand c'est fidèle au plat, pas de friture profonde. Quantités pour 2 personnes. Écris en français.
+Pour chaque ingrédient : "u" parmi "g","ml","","c.s.","c.c.","boîte","gousse","pot","botte","sachet","morceau","boule","cube" ("" = à l'unité) ; "rayon" parmi F (fruits et légumes), B (boucherie, poisson), C (crèmerie, frais), E (épicerie), S (épices et sauces), P (boulangerie). N'inclus pas huile, sel, poivre. "prot" parmi : ${PROTS.join(", ")}. "four" = température en °C ou null. Chaque étape a "min" = minutes d'attente ou de cuisson (0 si aucune). "d" = {"prep": minutes, "cuis": minutes, "diff": 1 à 3, "ust": "ustensiles", "astuce": "une astuce de chef concrète", "service": "accompagnement", "conserv": "conservation"}. "temps" = prep + cuis.
+Réponds uniquement avec ce JSON :
+{"nom":"...","cuisine":"pays ou style","prot":"...","temps":45,"four":200,"ing":[{"nom":"...","q":200,"u":"g","rayon":"B"}],"steps":[{"t":"...","min":10}],"d":{"prep":15,"cuis":30,"diff":1,"ust":"...","astuce":"...","service":"...","conserv":"..."}}`;
+  try{
+    const res=await AI.sample.json(prompt,{signal:AI.ctl.signal,cache:false});
+    const r=toRecipe(res,0);
+    if(!r){AI.status="error";AI.err="La recette reçue était incomplète. Relancez ou reformulez.";return render()}
+    const d=res&&res.d||{},num=(v,a,b)=>{v=Math.round(Number(v));return v>=a&&v<=b?v:null};
+    const prep=num(d.prep,1,600),cuis=num(d.cuis,0,900);
+    if(prep!=null&&cuis!=null)r.d={prep,cuis,diff:num(d.diff,1,3)||1,ust:String(d.ust||"").slice(0,200)||"Ustensiles courants",astuce:String(d.astuce||"").slice(0,400)||"Goûtez et ajustez l’assaisonnement en fin de cuisson.",service:String(d.service||"").slice(0,200)||"—",conserv:String(d.conserv||"").slice(0,200)||"—"};
+    r.ai=true;r.futur=fut;r.manque=[];if(fut)r.cuisine="Cuisine du futur · "+r.cuisine;
+    GEN.push(r);AI.status="idle";AI.q="";render();UI.sheetTab="ing";UI.viewP=S.p;openRecipe(r.id);
+  }catch(e){
+    const code=e&&e.code;
+    if(code==="cancelled"){AI.status="idle";return render()}
+    AI.status="error";
+    AI.err=code==="not_granted"||code==="sampling_disabled"?"L’accès à Claude a été refusé pour cette page. Autorisez-le dans les permissions de l’artefact.":
+      code==="rate_limited"?"Trop de demandes pour l’instant, ou limite d’usage atteinte. Réessayez dans quelques minutes.":
+      code==="refused"?"Claude n’a pas pu écrire cette recette. Essayez une autre demande.":
+      code==="invalid_json"?"La réponse n’était pas exploitable. Relancez.":"La création a échoué (connexion). Réessayez.";
+    if(code==="not_granted"||code==="sampling_disabled"||code==="not_declared")AI.ok=false;
+    render();
+  }
+}
+
+
+/* ---------- Courses : glisser un article vers la gauche pour le retirer ---------- */
+let SW=null,LASTDEL=null,SWBLOCK=0;
+document.addEventListener("pointerdown",e=>{
+  const row=e.target.closest&&e.target.closest(".item");if(!row||e.button>0)return;
+  SW={row,x:e.clientX,y:e.clientY,dx:0,on:false,id:e.pointerId};
+});
+document.addEventListener("pointermove",e=>{
+  if(!SW||e.pointerId!==SW.id)return;const dx=e.clientX-SW.x,dy=e.clientY-SW.y;
+  if(!SW.on){if(Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.3){SW.on=true;SW.row.classList.add("swiping")}else if(Math.abs(dy)>10){SW=null;return}else return}
+  SW.dx=Math.min(0,dx);SW.row.style.transform=`translateX(${SW.dx}px)`;SW.row.style.setProperty("--sw",Math.min(1,-SW.dx/110));
+});
+function endSwipe(){
+  if(!SW)return;const s=SW;SW=null;if(!s.on)return;SWBLOCK=Date.now();
+  s.row.classList.remove("swiping");
+  if(s.dx<-100){s.row.style.transition="transform .18s ease, opacity .18s ease";s.row.style.transform="translateX(-110%)";s.row.style.opacity="0";
+    setTimeout(()=>deleteItem(s.row.dataset.key),170)}
+  else{s.row.style.transition="transform .2s ease";s.row.style.transform="";setTimeout(()=>{s.row.style.transition="";s.row.style.removeProperty("--sw")},200)}
+}
+document.addEventListener("pointerup",endSwipe);document.addEventListener("pointercancel",endSwipe);
+document.addEventListener("click",e=>{if(Date.now()-SWBLOCK<350&&e.target.closest&&e.target.closest(".item")){e.preventDefault();e.stopPropagation()}},true);
+function deleteItem(k){
+  if(!k)return;
+  if(k.startsWith("x|")){const name=k.slice(2),i=S.extras.indexOf(name);if(i>=0)S.extras.splice(i,1);LASTDEL={k,extra:name,i,done:!!S.done[k]}}
+  else{S.hidden=S.hidden||{};S.hidden[k]=true;LASTDEL={k}}
+  delete S.done[k];save();render();
+  const s=document.getElementById("toastSlot");s.innerHTML=`<div class="toast undo" role="status"><span>Article retiré</span><button id="undoDel">Annuler</button></div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>s.innerHTML="",4000);
+  try{navigator.vibrate&&navigator.vibrate(12)}catch(_){}
+}
+function undoDel(){
+  const d=LASTDEL;if(!d)return;LASTDEL=null;
+  if(d.extra!=null){S.extras.splice(Math.min(d.i,S.extras.length),0,d.extra);if(d.done)S.done[d.k]=true}else if(S.hidden)delete S.hidden[d.k];
+  save();render();document.getElementById("toastSlot").innerHTML="";
+}
+
 /* ---------- Événements ---------- */
 function toggleIn(arr,v){return arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]}
 document.addEventListener("click",e=>{
@@ -2031,6 +2385,11 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
   const ds=t.dataset,inSheet=!!t.closest(".sheet");
   if(t.id==="openFridge")return openFridge();
+  if(ds.aimode){AI.mode=ds.aimode;AI.status=AI.status==="busy"?"busy":"idle";return render()}
+  if(ds.aisug)return runAI(ds.aisug);
+  if(t.id==="aiStop"){if(AI.ctl)AI.ctl.abort();return}
+  if(t.id==="undoDel"){undoDel();return}
+  if(t.id==="restoreHidden"){S.hidden={};save();render();return toast("Articles restaurés")}
   if(t.id==="runFridge")return runFridge();
   if(t.id==="stopFridge"){if(FR.ctl)FR.ctl.abort();return}
   if(t.id==="resetFridge")return resetFridge();
@@ -2102,11 +2461,13 @@ document.addEventListener("change",e=>{
   updateCourses();
 });
 document.addEventListener("input",e=>{
+  if(e.target.id==="aiq"){AI.q=e.target.value;return}
   if(e.target.id==="search"){UI.q=e.target.value;const rl=document.getElementById("rlist");if(rl)rl.innerHTML=listHTML();return}
   if(e.target.dataset&&e.target.dataset.note){const id=e.target.dataset.note,v=e.target.value;if(v.trim())S.notes[id]=v.slice(0,2000);else delete S.notes[id];save()}
 });
 document.addEventListener("keydown",e=>{if(UI.cook){if(e.key==="Escape")closeCook(false);if(e.key==="ArrowRight")cookGo(UI.cook.i+1);if(e.key==="ArrowLeft")cookGo(UI.cook.i-1);return}if(e.key==="Escape")closeSheet()});
 document.addEventListener("submit",e=>{
+  if(e.target.id==="aiForm"){e.preventDefault();return runAI(document.getElementById("aiq").value)}
   if(e.target.id==="addForm"){e.preventDefault();const inp=document.getElementById("addInput"),v=inp.value.trim();if(!v)return;
     if(!S.extras.includes(v))S.extras.push(v.slice(0,80));save();render();toast("Article ajouté");const n=document.getElementById("addInput");if(n)n.focus()}
   if(e.target.id==="recipeForm"){e.preventDefault();submitRecipe()}

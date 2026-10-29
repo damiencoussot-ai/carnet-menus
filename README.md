@@ -1,6 +1,6 @@
 # Carnet de menus
 
-Planificateur de dîners de la semaine : 104 recettes (dont 75 plats de terroir) avec calories, liste de courses par rayon, minuteurs, fonctionne hors connexion.
+Planificateur de dîners de la semaine : 158 recettes de 26 régions du monde avec calories, liste de courses par rayon, minuteurs, fonctionne hors connexion.
 
 ## Installer sur le téléphone
 - **Android (Chrome)** : ouvrir le lien du site, menu ⋮ → « Installer l'application » (ou « Ajouter à l'écran d'accueil »).
