@@ -934,6 +934,52 @@ html[data-skin="futur"] .settings .sgroup{background:var(--glass);backdrop-filte
 html[data-skin="futur"] .skincard{background:var(--glass)}
 html[data-skin="futur"] .skincard[aria-pressed="true"]{border-color:#8a6bff;box-shadow:0 0 18px rgba(138,107,255,.45)}
 html[data-skin="futur"] .sk-check{background:linear-gradient(120deg,#3ccfff,#8a6bff,#ff4fd8);color:#fff}
+
+/* ---- v16 : fluidité et nouveautés ---- */
+.tile2{content-visibility:auto;contain-intrinsic-size:auto 300px}
+.region{content-visibility:auto;contain-intrinsic-size:auto 520px}
+.more{height:40px}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.2s;animation-timing-function:ease}
+.srow2{display:flex;gap:8px;align-items:center}
+.srow2 .searchwrap{flex:1;min-width:0}
+.iconbtn.dice{width:48px;height:48px;border-radius:14px;flex:none}
+@media (prefers-reduced-motion:no-preference){.iconbtn.dice:active svg{transform:rotate(180deg);transition:transform .3s}}
+.seas{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:3px;font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--leaf-soft);color:var(--leaf);border:1px solid color-mix(in oklab,var(--leaf) 35%,transparent)}
+.seas svg.i{width:11px;height:11px}
+.rt{display:inline-flex;align-items:center;gap:2px;color:var(--spice);font-weight:700}
+.rt svg.i{width:12px;height:12px;fill:currentColor}
+.stars{display:inline-flex;gap:2px}
+.stars .st{border:0;background:transparent;padding:3px;cursor:pointer;color:var(--line);display:grid;place-items:center;border-radius:8px}
+.stars .st svg.i{width:20px;height:20px}
+.stars.big .st svg.i{width:28px;height:28px}
+.stars .st.on{color:var(--spice)}
+.stars .st.on svg.i{fill:currentColor}
+@media (prefers-reduced-motion:no-preference){.stars .st{transition:transform .12s}.stars .st:active{transform:scale(1.25)}}
+.raterow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.84rem;font-weight:600;color:var(--muted)}
+.cooked{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line);flex-wrap:wrap}
+.cooked>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cooked small{color:var(--muted);font-size:.8rem}
+.hstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.hstats>div{display:flex;flex-direction:column;align-items:center;gap:1px;padding:10px 4px;border-radius:12px;background:var(--soft);text-align:center}
+.hstats b{font-size:1.3rem;font-variant-numeric:tabular-nums;color:var(--accent)}
+.hstats span{font-size:.66rem;color:var(--muted);line-height:1.2}
+.cook.finish .cook-body{align-items:center;text-align:center}
+.cook.finish .stars{justify-content:center}
+.cook-nav.one{grid-template-columns:1fr}
+@media (prefers-reduced-motion:no-preference){
+  .shero.surprise .orb{animation:surp .9s cubic-bezier(.2,.9,.2,1.2)}
+  @keyframes surp{0%{transform:rotate(-540deg) scale(.3);opacity:0}70%{opacity:1}100%{transform:none}}
+  .cook.finish .orb{animation:surp .8s cubic-bezier(.2,.9,.2,1.2)}
+}
+html[data-skin="mamie"] .hstats b{font-family:var(--display)}
+html[data-skin="mamie"] .hstats>div{border-radius:6px;border:1px solid var(--line);background:#fffdf7}
+html[data-skin="mamie"] .cooked{border-radius:6px;background:#fffdf7;border-style:dashed}
+html[data-skin="mamie"] .seas{border-radius:3px;background:#fffcf3;font-family:var(--hand);font-size:.9rem;font-weight:600;transform:rotate(-3deg)}
+html[data-skin="futur"] .hstats b{font-family:var(--mono);color:#fff;text-shadow:0 0 14px rgba(138,107,255,.6)}
+html[data-skin="futur"] .hstats>div{background:rgba(255,255,255,.05);border:1px solid var(--line)}
+html[data-skin="futur"] .cooked{background:var(--glass)}
+html[data-skin="futur"] .stars .st.on{color:#ffb547;filter:drop-shadow(0 0 6px rgba(255,181,71,.7))}
+html[data-skin="futur"] .seas{background:rgba(47,240,176,.15);color:#2ff0b0;box-shadow:0 0 10px rgba(47,240,176,.3)}
 </style>
 </head>
 <body>
@@ -1879,13 +1925,16 @@ chev:'<path d="M9 6l6 6-6 6"/>',
 image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
 fire2:'<path d="M12 3c.5 3.5 4.5 5 4.5 10a4.5 4.5 0 0 1-9 0c0-2 1-3.2 2-4 .2 1.6 1 2.6 2 3 .3-3 .1-6-.5-9z"/>',
 check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+dice:'<rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.1" fill="currentColor"/><circle cx="15" cy="15" r="1.1" fill="currentColor"/><circle cx="15" cy="9" r="1.1" fill="currentColor"/><circle cx="9" cy="15" r="1.1" fill="currentColor"/>',
+volume:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',
+mute:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/>',
 bowl:'<path d="M3 11h18a9 9 0 0 1-18 0zM9 3c0 2 2 2 2 4M14 3c0 2 2 2 2 4"/>',
 reset:'<path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.6M4 4v4.6h4.6"/>',
 ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'
 };
 const icon=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 
-function fresh(){return{skin:"mamie",hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
+function fresh(){return{hist:[],rate:{},skin:"mamie",hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
 function normalize(o){
   const s=fresh();if(!o||typeof o!=="object")return s;
   if(Number.isInteger(o.p))s.p=Math.min(8,Math.max(1,o.p));
@@ -1895,6 +1944,8 @@ function normalize(o){
   s.mine.forEach(r=>{if(r.dd&&!r.d)Object.defineProperty(r,"d",{value:r.dd,enumerable:false,writable:true})});
   if(o.hidden&&typeof o.hidden==="object")s.hidden=o.hidden;
   if(o.skin==="futur"||o.skin==="mamie")s.skin=o.skin;
+  if(Array.isArray(o.hist))s.hist=o.hist.filter(h=>h&&typeof h.id==="string"&&Number.isFinite(h.t)).slice(-300);
+  if(o.rate&&typeof o.rate==="object")Object.entries(o.rate).forEach(([k,v])=>{v=Math.round(+v);if(v>=1&&v<=5)s.rate[k]=v});
   if(o.cfg&&typeof o.cfg==="object")s.cfg={quick:!!o.cfg.quick,fish:!!o.cfg.fish,veg:Math.min(4,Math.max(0,+o.cfg.veg||0))};
   if(Array.isArray(o.week)&&o.week.length===7)s.week=o.week.map(x=>typeof x==="string"||x===null?{d:x,x2:false}:{d:x&&x.d||null,x2:!!(x&&x.x2),...(Number.isInteger(x&&x.p)&&x.p>=1&&x.p<=12?{p:x.p}:{})});
   return s;
@@ -1952,7 +2003,8 @@ function pickFor(i,arr,cat){
   else if(cat==="meat")pool=narrow(pool,r=>!isVeg(r)&&r.prot!=="poisson");
   if(S.cfg.quick&&i<5)pool=narrow(pool,r=>r.temps<=40);
   pool=narrow(pool,r=>!nb.includes(r.prot));
-  pool=pool.map(r=>({r,s:frigoScore(r)*3+(S.fav.includes(r.id)?2:0)+Math.random()*2.5+(i>=5&&r.temps>=50?1:0)+(i>=5&&r.terroir?1.5:0)})).sort((a,b)=>b.s-a.s);
+  const now=Date.now();pool=narrow(pool,r=>rateOf(r.id)!==1);
+  pool=pool.map(r=>({r,s:frigoScore(r)*3+(S.fav.includes(r.id)?2:0)+(rateOf(r.id)?(rateOf(r.id)-3)*1.2:0)-(S.hist.some(h=>h.id===r.id&&now-h.t<10*DAY)?3:0)+(seasonal(r)?1.2:0)+Math.random()*2.5+(i>=5&&r.temps>=50?1:0)+(i>=5&&r.terroir?1.5:0)})).sort((a,b)=>b.s-a.s);
   return pool.length?pool[0].r.id:null;
 }
 function generate(){
@@ -1985,8 +2037,38 @@ function sim(a,b){
 }
 function similarTo(r,n){return all().filter(x=>x.id!==r.id&&!S.ban.includes(x.id)).map(x=>({r:x,s:sim(r,x)+Math.random()*.2})).sort((a,b)=>b.s-a.s).slice(0,n).map(x=>x.r)}
 function forFavs(list){
-  const favs=S.fav.map(byId).filter(Boolean);if(!favs.length)return[];
-  return list.filter(r=>!S.fav.includes(r.id)&&!S.ban.includes(r.id)).map(r=>({r,s:favs.reduce((a,f)=>a+sim(f,r),0)/favs.length})).sort((a,b)=>b.s-a.s).slice(0,15).map(x=>x.r);
+  const seed=[...new Set([...S.fav,...Object.keys(S.rate).filter(k=>S.rate[k]>=4)])];const favs=seed.map(byId).filter(Boolean);if(!favs.length)return[];
+  return list.filter(r=>!seed.includes(r.id)&&!S.ban.includes(r.id)).map(r=>({r,s:favs.reduce((a,f)=>a+sim(f,r),0)/favs.length})).sort((a,b)=>b.s-a.s).slice(0,15).map(x=>x.r);
+}
+
+
+/* ---------- Saisons (France) : mois 0 = janvier ---------- */
+const M=(...a)=>a;
+const SEASON=[
+ [/courge|butternut/,M(8,9,10,11,0)],[/chou(?!croute)|kale/,M(9,10,11,0,1,2)],[/poireau/,M(8,9,10,11,0,1,2,3)],[/endive|frisée/,M(9,10,11,0,1,2,3)],
+ [/navet/,M(9,10,11,0,1,2)],[/betterave/,M(8,9,10,11,0,1,2)],[/champignon/,M(8,9,10)],[/épinard/,M(2,3,4,8,9,10)],[/brocoli/,M(8,9,10)],
+ [/^tomates?$|tomates cerises/,M(5,6,7,8)],[/courgette/,M(5,6,7,8)],[/aubergine/,M(6,7,8)],[/poivron/,M(6,7,8)],[/haricots verts/,M(5,6,7,8)],
+ [/concombre/,M(4,5,6,7,8)],[/radis/,M(3,4,5)],[/épis de maïs/,M(7,8)],[/basilic/,M(5,6,7,8)],[/^pommes$/,M(8,9,10,11,0,1,2)],[/orange/,M(11,0,1,2)]
+];
+const SEAS_CACHE=new Map();
+function seasonal(r){
+  if(SEAS_CACHE.has(r.id))return SEAS_CACHE.get(r.id);
+  const m=new Date().getMonth();let inS=0,out=0;
+  r.ing.forEach(([n])=>{const l=n.toLowerCase();const e=SEASON.find(([re])=>re.test(l));if(e){if(e[1].includes(m))inS++;else out++}});
+  const v=inS>0&&out===0;SEAS_CACHE.set(r.id,v);return v;
+}
+/* ---------- Notes et historique ---------- */
+const rateOf=id=>S.rate[id]||0;
+const cookedOf=id=>S.hist.filter(h=>h.id===id);
+const DAY=864e5;
+function stars(id,big){const v=rateOf(id);return `<span class="stars${big?" big":""}" role="group" aria-label="Noter ce plat">${[1,2,3,4,5].map(n=>`<button class="st${n<=v?" on":""}" data-rate="${esc(id)}|${n}" aria-label="${n} étoile${n>1?"s":""}" aria-pressed="${n<=v}">${icon("star")}</button>`).join("")}</span>`}
+function setRate(id,n){if(S.rate[id]===n)delete S.rate[id];else S.rate[id]=n;save();
+  document.querySelectorAll(".stars").forEach(g=>{const b=g.querySelector("[data-rate]");if(!b||b.dataset.rate.split("|")[0]!==id)return;const v=rateOf(id);g.querySelectorAll("[data-rate]").forEach(x=>{const k=+x.dataset.rate.split("|")[1];x.classList.toggle("on",k<=v);x.setAttribute("aria-pressed",String(k<=v))})})}
+function markCooked(id,p){S.hist.push({id,t:Date.now(),p:p||S.p});if(S.hist.length>300)S.hist=S.hist.slice(-300);save()}
+const fmtDay=t=>new Date(t).toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
+function cookedBlock(r){
+  const h=cookedOf(r.id);
+  return `<div class="cooked"><div><b>${h.length?`Cuisiné ${h.length} fois`:"Pas encore cuisiné"}</b><small>${h.length?`Dernière fois le ${fmtDay(h[h.length-1].t)}`:"Notez-le après l’avoir fait"}</small></div><button class="btn ghost small" data-cooked="${esc(r.id)}">${icon("check")}J’ai cuisiné ce plat</button></div>`;
 }
 
 /* ---------- Rendu ---------- */
@@ -2010,11 +2092,13 @@ function render(){
   renderChrome();
   const m=document.getElementById("main");
   m.innerHTML=UI.tab==="semaine"?viewSemaine():UI.tab==="courses"?viewCourses():UI.tab==="terroirs"?viewTerroirs():UI.tab==="reglages"?viewReglages():viewRecettes();
+  hookMore();
 }
+function smooth(fn){if(document.startViewTransition&&!reduced()){try{document.startViewTransition(fn);return}catch(e){}}fn()}
 function goTab(t){
   UI.scroll[UI.tab]=window.scrollY;UI.tab=t;UI.confirmClear=false;
   if(t!=="recettes"&&t!=="terroirs")UI.pick=null;
-  render();window.scrollTo(0,UI.scroll[t]||0);
+  smooth(()=>{render();window.scrollTo(0,UI.scroll[t]||0)});
 }
 
 
@@ -2037,7 +2121,11 @@ function plateColors(r){
     const f=FOOD.find(([re])=>re.test(l));if(f&&!cols.includes(f[1]))cols.push(f[1]);});
   return{base:base||"#ead8bd",cols:cols.slice(0,5)};
 }
+const PLATE_CACHE=new Map();
 function plate(r,cls){
+  const pk=r.id+"|"+(cls||"");if(PLATE_CACHE.has(pk))return PLATE_CACHE.get(pk);const out=plateRaw(r,cls);if(PLATE_CACHE.size>900)PLATE_CACHE.clear();PLATE_CACHE.set(pk,out);return out;
+}
+function plateRaw(r,cls){
   const {base,cols}=plateColors(r),h=hsh(r.id);let g="";
   cols.forEach((c,k)=>{const a=((h>>(k*3))%360+k*(360/Math.max(cols.length,1)))*Math.PI/180,d=k===0?0:13+((h>>(k+2))%7);
     const cx=50+Math.cos(a)*d,cy=50+Math.sin(a)*d,rx=k===0?20:11+((h>>(k*5))%6),ry=k===0?16:9+((h>>(k*4))%5),rot=(h>>(k*2))%180;
@@ -2121,13 +2209,16 @@ function updateCourses(){
   if(b){if(left)b.textContent=left;else b.remove()}else if(left)renderChrome();
 }
 
-const FILTERS=["Toutes","Favoris","Pour vous","Légères","Rapides","Sans viande","Poisson","Au four","Mes recettes","Exclues"];
+const FILTERS=["Toutes","Favoris","Pour vous","De saison","Mieux notées","Déjà cuisinées","Légères","Rapides","Sans viande","Poisson","Au four","Mes recettes","Exclues"];
 function filtered(){
   const q=UI.q.trim().toLowerCase(),f=UI.filter;
   const l=all().filter(r=>{
     if(f==="Favoris"&&!S.fav.includes(r.id))return false;
     if(f==="Rapides"&&r.temps>30)return false;
     if(f==="Légères"&&nutrition(r).kcal>600)return false;
+    if(f==="De saison"&&!seasonal(r))return false;
+    if(f==="Mieux notées"&&rateOf(r.id)<4)return false;
+    if(f==="Déjà cuisinées"&&!S.hist.some(h=>h.id===r.id))return false;
     if(f==="Sans viande"&&!isVeg(r))return false;
     if(f==="Poisson"&&r.prot!=="poisson")return false;
     if(f==="Au four"&&!r.four)return false;
@@ -2136,6 +2227,8 @@ function filtered(){
     if(q&&!(r.nom.toLowerCase().includes(q)||(r.cuisine||"").toLowerCase().includes(q)||(r.region||"").toLowerCase().includes(q)||r.ing.some(i=>i[0].toLowerCase().includes(q))))return false;
     return true;
   });
+  if(f==="Mieux notées")l.sort((a,b)=>rateOf(b.id)-rateOf(a.id));
+  if(f==="Déjà cuisinées"){const last=id=>{const h=cookedOf(id);return h.length?h[h.length-1].t:0};l.sort((a,b)=>last(b.id)-last(a.id))}
   return f==="Pour vous"?forFavs(l):l;
 }
 function card(r){
@@ -2145,18 +2238,29 @@ function card(r){
 }
 function tile(r){
   const fav=S.fav.includes(r.id);
-  return `<div class="tile2${S.ban.includes(r.id)?" banned":""}" style="${tint(r)}"><button class="open" data-${UI.pick!=null?"assign":"open"}="${esc(r.id)}"><span class="tart">${plate(r,"md")}<span class="kpill">${nutrition(r).kcal} kcal</span></span><span class="tbody"><span class="eyebrow">${esc(r.terroir&&r.zone==="France"?r.region:r.cuisine)}</span><span class="t">${esc(r.nom)}</span><span class="tmeta">${icon("clock")}${fmtT(r.temps)}${r.d&&r.d.diff>1?`<span class="dot"></span>${DIFF[r.d.diff]}`:""}${r.four?`<span class="dot"></span>${icon("flame")}${r.four}°`:""}${r.prot==="poisson"?`<span class="dot"></span>Poisson`:isVeg(r)?`<span class="dot"></span>Végé`:""}</span></span></button>
+  return `<div class="tile2${S.ban.includes(r.id)?" banned":""}" style="${tint(r)}"><button class="open" data-${UI.pick!=null?"assign":"open"}="${esc(r.id)}"><span class="tart">${plate(r,"md")}<span class="kpill">${nutrition(r).kcal} kcal</span>${seasonal(r)?`<span class="seas">${icon("leaf")}De saison</span>`:""}</span><span class="tbody"><span class="eyebrow">${esc(r.terroir&&r.zone==="France"?r.region:r.cuisine)}</span><span class="t">${esc(r.nom)}</span><span class="tmeta">${rateOf(r.id)?`<span class="rt">${icon("star")}${rateOf(r.id)}</span><span class="dot"></span>`:""}${icon("clock")}${fmtT(r.temps)}${r.d&&r.d.diff>1?`<span class="dot"></span>${DIFF[r.d.diff]}`:""}${r.four?`<span class="dot"></span>${icon("flame")}${r.four}°`:""}${r.prot==="poisson"?`<span class="dot"></span>Poisson`:isVeg(r)?`<span class="dot"></span>Végé`:""}</span></span></button>
     <button class="star abs" data-fav="${esc(r.id)}" aria-pressed="${fav}" aria-label="${fav?"Retirer des favoris":"Ajouter aux favoris"}">${icon("star")}</button></div>`;
 }
+const PAGE=24;
 function listHTML(){
-  const l=filtered();
+  const l=filtered();UI.list=l;UI.shown=Math.min(PAGE,l.length);
   if(!l.length)return `<p class="empty">${UI.filter==="Pour vous"&&!S.fav.length?"Mettez quelques recettes en favori ★ : celles qui leur ressemblent (même région, même viande, ingrédients en commun) apparaîtront ici.":"Aucune recette ne correspond."}</p>`;
-  return `<span class="note">${l.length} recette${l.length>1?"s":""}${UI.filter==="Pour vous"?", classées selon vos favoris":""}</span>`+`<div class="tgrid">${l.map(tile).join("")}</div>`;
+  return `<span class="note">${l.length} recette${l.length>1?"s":""}${UI.filter==="Pour vous"?", classées selon vos favoris":""}</span>`+`<div class="tgrid" id="tgrid">${l.slice(0,UI.shown).map(tile).join("")}</div>${l.length>UI.shown?`<div id="more" class="more" aria-hidden="true"></div>`:""}`;
 }
+let MORE_IO=null;
+function hookMore(){
+  if(MORE_IO){MORE_IO.disconnect();MORE_IO=null}
+  const s=document.getElementById("more");if(!s||!("IntersectionObserver" in window)){if(s)s.remove();return}
+  MORE_IO=new IntersectionObserver(es=>{if(!es.some(e=>e.isIntersecting))return;const g=document.getElementById("tgrid");if(!g||!UI.list)return;
+    const next=UI.list.slice(UI.shown,UI.shown+PAGE);UI.shown+=next.length;g.insertAdjacentHTML("beforeend",next.map(tile).join(""));
+    if(UI.shown>=UI.list.length){MORE_IO.disconnect();MORE_IO=null;const m=document.getElementById("more");if(m)m.remove()}},{rootMargin:"600px 0px"});
+  MORE_IO.observe(s);
+}
+function refreshList(){const rl=document.getElementById("rlist");if(rl){rl.innerHTML=listHTML();hookMore()}}
 const pickBanner=()=>UI.pick!=null?`<div class="banner"><span>Dîner de <strong>${JOURS[UI.pick]}</strong> : touchez une recette</span><button class="btn ghost small" id="cancelPick">Annuler</button></div>`:"";
 function viewRecettes(){
   return `<div class="view">${pickBanner()}${UI.pick==null?fridgeCta()+aiCard():""}
-    <div class="searchbar"><div class="searchwrap">${icon("search")}<input type="search" id="search" placeholder="Recette, ingrédient, région…" value="${esc(UI.q)}" aria-label="Rechercher" autocomplete="off"></div>
+    <div class="searchbar"><div class="srow2"><div class="searchwrap">${icon("search")}<input type="search" id="search" placeholder="Recette, ingrédient, région…" value="${esc(UI.q)}" aria-label="Rechercher" autocomplete="off"></div><button class="iconbtn dice" id="surprise" aria-label="Surprends-moi : une recette au hasard">${icon("dice")}</button></div>
       <div class="chips scroll" role="group" aria-label="Filtres">${FILTERS.map(c=>`<button class="chip" data-filter="${esc(c)}" aria-pressed="${UI.filter===c}">${c==="Favoris"?"★ Favoris":esc(c)}</button>`).join("")}</div></div>
     <div class="rlist" id="rlist">${listHTML()}</div></div>`;
 }
@@ -2185,10 +2289,11 @@ function openRecipe(id,tab){
   const r=byId(id);if(!r)return;if(!UI.viewP)UI.viewP=S.p;UI.confirmDel=false;UI.openId=id;if(tab)UI.sheetTab=tab;
   const fav=S.fav.includes(id),d=weekDates();
   const days=JOURS.map((j,i)=>{const cur=S.week[i].d;return `<button class="daybtn${cur===id?" here":cur?" taken":""}" data-placeday="${i}" aria-label="Mettre au menu de ${j}${cur&&cur!==id?", remplace "+esc(short(byId(cur).nom)):""}">${j.slice(0,1)}<small>${d[i].getDate()}</small></button>`}).join("");
-  sheet(`<div class="shero" style="${tint(r)}"><div class="shero-top"><span class="eyebrow">${esc(r.terroir?r.region:r.cuisine)}${r.veille?" · à préparer la veille":""}</span><span class="row" style="gap:2px;flex-wrap:nowrap"><button class="iconbtn flat star" data-fav="${esc(id)}" aria-pressed="${fav}" aria-label="${fav?"Retirer des favoris":"Ajouter aux favoris"}">${icon("star")}</button>${closeBtn}</span></div>
+  sheet(`<div class="shero${UI.surprise?" surprise":""}" style="${tint(r)}"><div class="shero-top"><span class="eyebrow">${esc(r.terroir?r.region:r.cuisine)}${r.veille?" · à préparer la veille":""}</span><span class="row" style="gap:2px;flex-wrap:nowrap"><button class="iconbtn flat star" data-fav="${esc(id)}" aria-pressed="${fav}" aria-label="${fav?"Retirer des favoris":"Ajouter aux favoris"}">${icon("star")}</button>${closeBtn}</span></div>
       <div class="shero-main"><h2>${esc(r.nom)}</h2>${orb(r,"lg")}</div>
       <div class="facts big"><span>${icon("clock")}${fmtT(r.temps)}</span><span>${icon("flame")}${r.four?r.four+" °C":"Sans four"}</span><span>${icon("fire2")}${nutrition(r).kcal} kcal</span><span>${icon(r.prot==="poisson"?"fish":isVeg(r)?"leaf":"jar")}${esc(r.prot)}</span></div>
-      <div class="vstep" role="group" aria-label="Nombre de personnes pour cette recette"><span>Pour</span><button id="vpMinus" aria-label="Une personne de moins">−</button><b id="vpOut">${UI.viewP}</b><button id="vpPlus" aria-label="Une personne de plus">+</button><span>personne${UI.viewP>1?"s":""}</span></div></div>
+      <div class="vstep" role="group" aria-label="Nombre de personnes pour cette recette"><span>Pour</span><button id="vpMinus" aria-label="Une personne de moins">−</button><b id="vpOut">${UI.viewP}</b><button id="vpPlus" aria-label="Une personne de plus">+</button><span>personne${UI.viewP>1?"s":""}</span></div>
+      <div class="raterow"><span>Votre note</span>${stars(id,true)}${UI.surprise?`<button class="btn ghost small" id="surprise">${icon("dice")}Une autre</button>`:""}</div></div>
     ${r.gen?`<div class="genbar"><span class="note">${r.ai?(r.futur?"Recette inventée par Claude":"Recette écrite par Claude à votre demande")+" · pas encore enregistrée":"Idée générée depuis votre photo"}${r.manque.length?" · il manque : "+esc(r.manque.join(", ")):""}</span><div class="row" style="gap:6px">${r.ai?"":`<button class="btn ghost small" id="backFridge">← Idées</button>`}${r.manque.length?`<button class="btn ghost small" data-addmiss="${esc(id)}">${icon("cart")}Manquants aux courses</button>`:""}<button class="btn small" data-savegen="${esc(id)}">Enregistrer</button></div></div>`:""}
     <div class="group"><span class="label">Mettre au menu</span><div class="week7">${days}</div></div>
     <div class="seg" role="group" aria-label="Sections"><button data-stab="ing" aria-pressed="${UI.sheetTab==="ing"}">Ingrédients</button><button data-stab="steps" aria-pressed="${UI.sheetTab==="steps"}">Étapes</button><button data-stab="more" aria-pressed="${UI.sheetTab==="more"}">Plus</button></div>
@@ -2220,8 +2325,9 @@ function sheetTab(r){
     <p class="note">Touchez une étape pour la cocher.</p>`;
   }
   if(UI.sheetTab==="more"){
+    const _cb=cookedBlock(r);
     const ban=S.ban.includes(r.id);
-    return `${d?`<div class="cards2"><div class="icard">${icon("bowl")}<b>Pour accompagner</b><p>${esc(d.service)}</p></div><div class="icard">${icon("clock")}<b>Conservation</b><p>${esc(d.conserv)}</p></div></div>`:""}
+    return `${_cb}${d?`<div class="cards2"><div class="icard">${icon("bowl")}<b>Pour accompagner</b><p>${esc(d.service)}</p></div><div class="icard">${icon("clock")}<b>Conservation</b><p>${esc(d.conserv)}</p></div></div>`:""}
     <div class="group"><span class="label">Dans le même esprit</span><div class="similar">${similarTo(r,4).map(x=>`<button class="simbtn" data-open="${esc(x.id)}"><b>${esc(x.nom)}</b><span>${esc(x.terroir?x.region:x.cuisine)} · ${esc(x.prot)} · ${fmtT(x.temps).replace(/ /g," ")}${x.d?" · "+DIFF[x.d.diff].toLowerCase():""}</span></button>`).join("")}</div></div>
     <div class="group"><label class="label" for="noteBox">Mes notes</label><textarea id="noteBox" data-note="${esc(r.id)}" rows="3" placeholder="Ajustements, cuisson de votre four, idées…">${esc(S.notes[r.id]||"")}</textarea></div>
     <div class="menu"><button data-ban="${esc(r.id)}" aria-pressed="${ban}">${icon("ban")}${ban?"Exclue des suggestions (touchez pour réactiver)":"Ne plus proposer cette recette"}</button>${r.mine?`<button class="danger" id="delRecipe" data-del="${esc(r.id)}">${icon("trash")}Supprimer cette recette</button>`:""}</div>`;
@@ -2256,6 +2362,15 @@ function openSettings(){
       <textarea id="importBox" rows="2" placeholder="Coller un code de sauvegarde ici" aria-label="Code de sauvegarde"></textarea>
       <div class="row"><button class="btn small" id="importData">Importer</button><span class="err" id="importErr"></span></div></div>`,"Réglages");
 }
+function histBlock(){
+  const now=Date.now(),m0=new Date();m0.setDate(1);m0.setHours(0,0,0,0);
+  const month=S.hist.filter(h=>h.t>=m0.getTime()).length,uniq=new Set(S.hist.map(h=>h.id)).size,rated=Object.keys(S.rate).length;
+  const last=[...S.hist].reverse().filter((h,i,a)=>a.findIndex(x=>x.id===h.id)===i).slice(0,5).map(h=>({h,r:byId(h.id)})).filter(x=>x.r);
+  const top=Object.entries(S.rate).filter(([k,v])=>v>=4&&byId(k)).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  return `<div class="hstats"><div><b>${month}</b><span>ce mois-ci</span></div><div><b>${S.hist.length}</b><span>plats cuisinés</span></div><div><b>${uniq}</b><span>recettes différentes</span></div><div><b>${rated}</b><span>notées</span></div></div>
+    ${last.length?`<span class="label">Récemment cuisiné</span><div class="similar">${last.map(({h,r})=>`<button class="simbtn" data-open="${esc(r.id)}"><b>${esc(r.nom)}</b><span>${fmtDay(h.t)}${rateOf(r.id)?" · "+"★".repeat(rateOf(r.id)):""}</span></button>`).join("")}</div>`:`<p class="note" style="margin:0">Terminez une recette en mode cuisine, ou touchez « J’ai cuisiné ce plat » dans une fiche : votre historique apparaîtra ici.</p>`}
+    ${top.length?`<span class="label">Vos préférés</span><div class="chips">${top.map(([k,v])=>`<button class="chip" data-open="${esc(k)}">${"★".repeat(v)} ${esc(short(byId(k).nom))}</button>`).join("")}</div>`:""}`;
+}
 function viewReglages(){
   const chips=FRIGO.map(f=>`<button class="chip leaf" data-frigo="${f.k}" aria-pressed="${S.frigo.includes(f.k)}">${esc(f.l)}</button>`).join("");
   const hid=Object.keys(S.hidden||{}).length,nb=all().length;
@@ -2264,6 +2379,7 @@ function viewReglages(){
     <div class="sechead"><h2>Réglages</h2></div>
     <section class="sgroup"><span class="label">Apparence</span>
       <div class="skins">${card("mamie","Carnet de grand-mère","Papier, nappe vichy, assiettes en émail")}${card("futur","Cuisine du futur","Fond sombre, verre et néons")}</div></section>
+    <section class="sgroup"><span class="label">Mon carnet</span>${histBlock()}</section>
     <section class="sgroup"><span class="label">À table</span>
       <div class="srow"><span><b>Personnes par défaut</b><small>Toutes les quantités s’adaptent</small></span><div class="stepper"><button id="pMinus" aria-label="Une personne de moins">−</button><output id="pOut">${S.p}</output><button id="pPlus" aria-label="Une personne de plus">+</button></div></div></section>
     <section class="sgroup"><span class="label">Générer la semaine</span>
@@ -2514,7 +2630,17 @@ function openCook(id,p){
   try{navigator.wakeLock&&navigator.wakeLock.request("screen").then(l=>WL=l).catch(()=>{})}catch(e){}
   drawCook();
 }
+const VOICE=("speechSynthesis" in window)&&typeof SpeechSynthesisUtterance!=="undefined";
+function speak(t){if(!VOICE)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";u.rate=.98;speechSynthesis.speak(u)}catch(e){}}
+function finishCook(){
+  const c=UI.cook;if(!c)return;const r=byId(c.id);markCooked(c.id,c.p);c.done=true;try{VOICE&&speechSynthesis.cancel()}catch(e){}
+  document.getElementById("cookSlot").innerHTML=`<div class="cook finish" role="dialog" aria-modal="true" aria-label="Plat terminé" style="${tint(r)}">
+    <div class="cook-body">${orb(r,"lg")}<span class="eyebrow">C’est prêt</span><p class="cook-txt">Bon appétit !</p><p class="note" style="margin:0">Comment était « ${esc(short(r.nom))} » ?</p>${stars(c.id,true)}
+    <p class="note" style="margin:0">Les plats bien notés reviendront plus souvent dans vos semaines, ceux à 1 étoile ne seront plus proposés.</p></div>
+    <div class="cook-nav one"><button class="btn" id="cookClose">Terminer</button></div></div>`;
+}
 function closeCook(done){
+  try{VOICE&&speechSynthesis.cancel()}catch(e){}
   UI.cook=null;document.body.classList.remove("cooking");document.getElementById("cookSlot").innerHTML="";
   try{WL&&WL.release();WL=null}catch(e){}
   if(done)toast("Bon appétit !");
@@ -2522,7 +2648,7 @@ function closeCook(done){
 function drawCook(){
   const c=UI.cook;if(!c)return;const r=byId(c.id);const n=r.steps.length,[t,mn]=r.steps[c.i],f=c.p/2,last=c.i===n-1;
   document.getElementById("cookSlot").innerHTML=`<div class="cook" role="dialog" aria-modal="true" aria-label="Mode cuisine : ${esc(r.nom)}" style="${tint(r)}">
-    <div class="cook-top"><button class="iconbtn flat" id="cookClose" aria-label="Quitter le mode cuisine">${icon("x")}</button><span class="cook-name">${esc(short(r.nom))}</span><button class="pill" id="cookIng" aria-pressed="${c.ing}">${c.ing?"Étapes":"Ingrédients"}</button></div>
+    <div class="cook-top"><button class="iconbtn flat" id="cookClose" aria-label="Quitter le mode cuisine">${icon("x")}</button><span class="cook-name">${esc(short(r.nom))}</span>${VOICE?`<button class="iconbtn flat" id="cookVoice" aria-pressed="${!!c.voice}" aria-label="${c.voice?"Arrêter la lecture à voix haute":"Lire les étapes à voix haute"}">${icon(c.voice?"volume":"mute")}</button>`:""}<button class="pill" id="cookIng" aria-pressed="${c.ing}">${c.ing?"Étapes":"Ingrédients"}</button></div>
     <div class="cook-bar">${r.steps.map((_,k)=>`<i class="${k<c.i?"done":k===c.i?"cur":""}"></i>`).join("")}</div>
     ${c.ing?`<div class="cook-body"><span class="eyebrow">Ingrédients · ${c.p} pers.</span><ul class="ing big">${r.ing.map(([nm,q,u])=>`<li><span>${esc(nm)}</span><span class="iqty">${fmtQ(q*f,u)}</span></li>`).join("")}</ul></div>`
     :`<div class="cook-body" id="cookBody">${orb(r,"lg")}<span class="eyebrow">Étape ${c.i+1} sur ${n}</span><p class="cook-txt">${esc(t)}</p>
@@ -2531,7 +2657,8 @@ function drawCook(){
     <div class="cook-nav"><button class="btn ghost" id="cookPrev" ${c.i===0||c.ing?"disabled":""}>Précédent</button><button class="btn" id="cookNext" ${c.ing?"disabled":""}>${last?"Terminé ✓":"Suivant"}</button></div>
   </div>`;
 }
-function cookGo(k){const c=UI.cook;if(!c)return;const n=byId(c.id).steps.length;if(k>=n)return closeCook(true);c.i=Math.max(0,Math.min(n-1,k));drawCook()}
+function cookSpeak(){const c=UI.cook;if(!c||!c.voice||c.ing)return;const r=byId(c.id);speak(`Étape ${c.i+1}. ${r.steps[c.i][0]}`)}
+function cookGo(k){const c=UI.cook;if(!c)return;const n=byId(c.id).steps.length;if(k>=n)return finishCook();c.i=Math.max(0,Math.min(n-1,k));drawCook();cookSpeak()}
 
 /* ---------- Glisser pour fermer un panneau, glisser entre les étapes ---------- */
 let DR=null;
@@ -2644,6 +2771,11 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
   const ds=t.dataset,inSheet=!!t.closest(".sheet");
   if(t.id==="openFridge")return openFridge();
+  if(ds.rate){const [id,n]=ds.rate.split("|");setRate(id,+n);if(UI.cook&&UI.cook.done){closeCook(false);render();return toast(`Noté ${n}/5, merci !`)}if(UI.tab==="recettes"&&UI.filter==="Mieux notées")refreshList();return}
+  if(ds.cooked){markCooked(ds.cooked,UI.viewP);const st=document.getElementById("stab");if(st&&UI.sheetTab==="more")st.innerHTML=sheetTab(byId(ds.cooked));return toast("Ajouté à votre historique")}
+  if(t.id==="surprise"){const pool=(UI.tab==="recettes"?filtered():all()).filter(r=>!S.ban.includes(r.id)&&r.id!==UI.openId);if(!pool.length)return toast("Aucune recette avec ces filtres");
+    const r=pool[Math.floor(Math.random()*pool.length)];UI.surprise=true;UI.sheetTab="ing";UI.viewP=S.p;openRecipe(r.id);UI.surprise=false;try{navigator.vibrate&&navigator.vibrate([8,40,8])}catch(_){}return}
+  if(t.id==="cookVoice"){UI.cook.voice=!UI.cook.voice;if(!UI.cook.voice)try{speechSynthesis.cancel()}catch(_){};drawCook();cookSpeak();return}
   if(ds.aimode){AI.mode=ds.aimode;AI.status=AI.status==="busy"?"busy":"idle";return render()}
   if(ds.aisug)return runAI(ds.aisug);
   if(t.id==="aiStop"){if(AI.ctl)AI.ctl.abort();return}
@@ -2660,7 +2792,7 @@ document.addEventListener("click",e=>{
   if(ds.addmiss){const g=GEN.find(x=>x.id===ds.addmiss);if(g){g.manque.forEach(n=>{if(!S.extras.includes(n))S.extras.push(n)});save();renderChrome();toast(g.manque.length+" article"+(g.manque.length>1?"s":"")+" ajouté"+(g.manque.length>1?"s":"")+" aux courses")}return}
   if(ds.tab)return goTab(ds.tab);
   if(t.id==="openSettings")return goTab("reglages");
-  if(ds.skin){S.skin=ds.skin;save();applySkin();render();return toast(`Thème : ${SKINS[S.skin]}`)}
+  if(ds.skin){S.skin=ds.skin;save();smooth(()=>{applySkin();render()});return toast(`Thème : ${SKINS[S.skin]}`)}
   if(t.id==="hpMinus"||t.id==="hpPlus"){S.p=clampP(S.p+(t.id==="hpPlus"?1:-1));save();render();return toast(`${S.p} personne${S.p>1?"s":""} par défaut`)}
   if(ds.dp!=null){const i=UI.sel,v=+ds.dp;if(v===0)delete S.week[i].p;else{const np=clampP(dayP(i)+v);if(np===S.p)delete S.week[i].p;else S.week[i].p=np}save();return render()}
   if(t.id==="vpMinus"||t.id==="vpPlus"){UI.viewP=clampP((UI.viewP||S.p)+(t.id==="vpPlus"?1:-1));const o=document.getElementById("vpOut");if(o){o.textContent=UI.viewP;const lb=o.nextElementSibling&&o.nextElementSibling.nextElementSibling;if(lb)lb.textContent="personne"+(UI.viewP>1?"s":"")}if(UI.sheetTab==="ing"){const st=document.getElementById("stab");if(st)st.innerHTML=sheetTab(byId(UI.openId))}return}
@@ -2674,12 +2806,12 @@ document.addEventListener("click",e=>{
   if(ds.pick!=null){UI.pick=+ds.pick;if(inSheet)closeSheet();UI.scroll[UI.tab]=window.scrollY;UI.tab="recettes";render();window.scrollTo(0,0);return}
   if(t.id==="cancelPick"){UI.pick=null;return goTab("semaine")}
   if(ds.assign){const i=UI.pick;S.week[i].d=ds.assign;UI.pick=null;save();goTab("semaine");return toast(`${JOURS[i]} : c’est noté`)}
-  if(ds.filter){UI.filter=ds.filter;document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.filter===UI.filter)));document.getElementById("rlist").innerHTML=listHTML();return}
+  if(ds.filter){UI.filter=ds.filter;document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.filter===UI.filter)));refreshList();return}
   if(ds.zone){UI.zone=ds.zone;return render()}
   if(ds.jump){const el=document.getElementById(ds.jump);if(el)el.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"start"});return}
   if(ds.fav){const id=ds.fav;S.fav=toggleIn(S.fav,id);save();const on=S.fav.includes(id);
     document.querySelectorAll(`[data-fav="${CSS.escape(id)}"]`).forEach(b=>{b.setAttribute("aria-pressed",String(on));b.setAttribute("aria-label",on?"Retirer des favoris":"Ajouter aux favoris")});
-    if(UI.tab==="recettes"&&(UI.filter==="Favoris"||UI.filter==="Pour vous")){const rl=document.getElementById("rlist");if(rl)rl.innerHTML=listHTML()}
+    if(UI.tab==="recettes"&&(UI.filter==="Favoris"||UI.filter==="Pour vous"))refreshList()
     return toast(on?"Ajouté aux favoris":"Retiré des favoris")}
   if(ds.ban){const id=ds.ban;S.ban=toggleIn(S.ban,id);save();render();UI.sheetTab="more";openRecipe(id);return}
   if(ds.cookmode){const cp=ds.dayp!=null?dayP(+ds.dayp):(inSheet?UI.viewP:S.p);return openCook(ds.cookmode,cp)}
@@ -2722,7 +2854,7 @@ document.addEventListener("change",e=>{
 });
 document.addEventListener("input",e=>{
   if(e.target.id==="aiq"){AI.q=e.target.value;return}
-  if(e.target.id==="search"){UI.q=e.target.value;const rl=document.getElementById("rlist");if(rl)rl.innerHTML=listHTML();return}
+  if(e.target.id==="search"){UI.q=e.target.value;clearTimeout(UI.qt);UI.qt=setTimeout(refreshList,140);return}
   if(e.target.dataset&&e.target.dataset.note){const id=e.target.dataset.note,v=e.target.value;if(v.trim())S.notes[id]=v.slice(0,2000);else delete S.notes[id];save()}
 });
 document.addEventListener("keydown",e=>{if(UI.cook){if(e.key==="Escape")closeCook(false);if(e.key==="ArrowRight")cookGo(UI.cook.i+1);if(e.key==="ArrowLeft")cookGo(UI.cook.i-1);return}if(e.key==="Escape")closeSheet()});
