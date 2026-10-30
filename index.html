@@ -6,11 +6,11 @@
 <title>Carnet de menus</title>
 <meta name="description" content="Dîners de la semaine, recettes de terroir, calories et liste de courses.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#060914">
+<meta name="theme-color" content="#fffaf0">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Menus">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
@@ -980,6 +980,48 @@ html[data-skin="futur"] .hstats>div{background:rgba(255,255,255,.05);border:1px 
 html[data-skin="futur"] .cooked{background:var(--glass)}
 html[data-skin="futur"] .stars .st.on{color:#ffb547;filter:drop-shadow(0 0 6px rgba(255,181,71,.7))}
 html[data-skin="futur"] .seas{background:rgba(47,240,176,.15);color:#2ff0b0;box-shadow:0 0 10px rgba(47,240,176,.3)}
+
+/* ---- v17 : garde-manger, régimes, anti-gaspi, minuteurs multiples ---- */
+.pantry-cta{all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px;border-radius:20px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.pantry-cta:focus-visible{outline:2px solid var(--accent)}
+.leafic{background:var(--leaf)!important;color:var(--surface)!important;box-shadow:none!important}
+.fcat{flex-basis:100%;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-top:6px}
+.fcat:first-child{margin-top:0}
+.pchips{max-height:40vh;overflow:auto;padding:2px}
+.pres{all:unset;cursor:pointer;display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:8px 12px 8px 8px;border-radius:14px;border:1px solid var(--line);background:var(--surface)}
+.pres:focus-visible{outline:2px solid var(--accent)}
+.pres-p .plate{width:48px;height:48px}
+.pres-t{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pres-t b{font-size:.92rem;line-height:1.25}
+.pres-t small{font-size:.76rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbar{height:5px;border-radius:3px;background:var(--soft);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--leaf)}
+.pres-pc{font-weight:800;font-variant-numeric:tabular-nums;color:var(--leaf);font-size:.9rem}
+.sings{display:flex;flex-direction:column;gap:8px}
+.sings>div{display:flex;flex-wrap:wrap;gap:6px}
+.sing{display:inline-flex;gap:5px;align-items:baseline;padding:5px 10px;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-size:.92rem}
+.sing b{color:var(--accent);font-variant-numeric:tabular-nums}
+.sings.mini{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sings.mini .sing{font-size:.76rem;padding:2px 8px}
+.timers{position:fixed;left:0;right:0;bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px));z-index:16;display:flex;flex-direction:column;gap:1px}
+.timers .timer{position:static;min-width:0;width:100%;overflow:hidden}
+.cook .orb{align-self:center}
+body.cooking .toast{bottom:auto;top:calc(64px + env(safe-area-inset-top,0px))}
+body.cooking .timers{bottom:calc(96px + env(safe-area-inset-bottom,0px));left:max(18px,env(safe-area-inset-left,0px));right:max(18px,env(safe-area-inset-right,0px));z-index:60;max-width:604px;margin:0 auto;gap:6px}
+body.cooking .timers .timer{border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.waste{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:18px;background:var(--leaf-soft);border:1px solid color-mix(in oklab,var(--leaf) 30%,transparent)}
+.waste .ai-head b{color:var(--ink)}
+.wrow{display:flex;flex-direction:column;gap:6px}
+.wrow>b{font-size:.9rem}
+.importbox{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;border:1.5px dashed var(--accent);background:var(--surface)}
+html[data-skin="mamie"] .pantry-cta{border-radius:8px;background:#fffcf3;border:1.5px dashed var(--leaf)}
+html[data-skin="mamie"] .fcat{font-family:var(--hand);font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--accent)}
+html[data-skin="mamie"] .waste{border-radius:6px;background:#f1f3e2}
+html[data-skin="mamie"] .sing{border-radius:4px;background:#fffdf7}
+html[data-skin="futur"] .pantry-cta,html[data-skin="futur"] .pres,html[data-skin="futur"] .importbox{background:var(--glass)}
+html[data-skin="futur"] .waste{background:rgba(47,240,176,.08);border-color:rgba(47,240,176,.3)}
+html[data-skin="futur"] .sing b{color:#3ccfff}
+html[data-skin="futur"] .pbar i{background:linear-gradient(90deg,#2ff0b0,#3ccfff)}
 </style>
 </head>
 <body>
@@ -1881,12 +1923,28 @@ function nutrition(r){
 R.forEach(r=>{const d=DETAIL[r.id]||DETAIL2[r.id]||DETAIL3[r.id];if(d)r.d={prep:d[0],cuis:d[1],diff:d[2],ust:d[3],astuce:d[4],service:d[5],conserv:d[6]}});
 
 const FRIGO=[
- {k:"poulet",l:"Poulet",t:["poulet"]},{k:"boeuf",l:"Bœuf haché",t:["bœuf haché"]},{k:"oeufs",l:"Œufs",t:["œufs"]},
- {k:"lardons",l:"Lardons / ventrèche",t:["lardons","ventrèche"]},{k:"poivrons",l:"Poivrons",t:["poivron"]},{k:"brocoli",l:"Brocoli",t:["brocoli"]},
- {k:"pdt",l:"Pommes de terre",t:["pommes de terre"]},{k:"pois",l:"Pois chiches",t:["pois chiches"]},{k:"tomates",l:"Tomates en boîte",t:["tomates concassées"]},
- {k:"feta",l:"Feta",t:["feta"]},{k:"yaourt",l:"Yaourt",t:["yaourt"]},{k:"mozza",l:"Mozzarella",t:["mozzarella"]},
- {k:"riz",l:"Riz",t:["riz"]},{k:"semoule",l:"Semoule",t:["semoule"]},{k:"pates",l:"Pâtes",t:["penne","orecchiette","nouilles"]},{k:"coco",l:"Lait de coco",t:["lait de coco"]}
+ {k:"poulet",l:"Poulet",c:"Viandes & poissons",re:/poulet/},{k:"boeuf",l:"Bœuf haché",c:"Viandes & poissons",re:/bœuf haché/},{k:"boeufm",l:"Bœuf à mijoter",c:"Viandes & poissons",re:/paleron|rumsteck|plat de côtes|jarret de bœuf/},
+ {k:"porc",l:"Porc",c:"Viandes & poissons",re:/échine|porc haché|palette|poitrine de porc/},{k:"lardons",l:"Lardons / ventrèche",c:"Viandes & poissons",re:/lardons|ventrèche|poitrine (fumée|demi-sel)/},
+ {k:"saucisse",l:"Saucisses / chorizo",c:"Viandes & poissons",re:/saucisse|chorizo/},{k:"jambon",l:"Jambon",c:"Viandes & poissons",re:/jambon/},{k:"agneau",l:"Agneau",c:"Viandes & poissons",re:/agneau/},
+ {k:"veau",l:"Veau",c:"Viandes & poissons",re:/veau/},{k:"canard",l:"Canard",c:"Viandes & poissons",re:/canard|magret/},{k:"saumon",l:"Saumon",c:"Viandes & poissons",re:/saumon/},
+ {k:"poissonb",l:"Poisson blanc",c:"Viandes & poissons",re:/cabillaud|poissons? blancs?|morue/},{k:"crevettes",l:"Crevettes",c:"Viandes & poissons",re:/crevette/},{k:"oeufs",l:"Œufs",c:"Viandes & poissons",re:/^œufs?$/},
+ {k:"riz",l:"Riz",c:"Féculents",re:/^riz/},{k:"pates",l:"Pâtes",c:"Féculents",re:/pâtes|penne|orecchiette|nouilles|macaroni|tagliatelle|lasagne|vermicelle|gnocchi/},{k:"semoule",l:"Semoule / polenta",c:"Féculents",re:/semoule|polenta/},
+ {k:"pdt",l:"Pommes de terre",c:"Féculents",re:/pommes de terre/},{k:"patate",l:"Patate douce",c:"Féculents",re:/patates? douces?/},{k:"lentilles",l:"Lentilles",c:"Féculents",re:/lentilles/},
+ {k:"pois",l:"Pois chiches",c:"Féculents",re:/pois chiches/},{k:"haricots",l:"Haricots secs / en boîte",c:"Féculents",re:/^haricots (?!verts)/},{k:"pain",l:"Pain / tortillas",c:"Féculents",re:/pain|tortilla|pita|naan/},
+ {k:"oignon",l:"Oignons",c:"Légumes & fruits",re:/oignon/},{k:"tomfr",l:"Tomates fraîches",c:"Légumes & fruits",re:/^tomates?$|tomates cerises/},{k:"tomates",l:"Tomates en boîte",c:"Légumes & fruits",re:/tomates concassées/},
+ {k:"poivrons",l:"Poivrons",c:"Légumes & fruits",re:/poivron/},{k:"courgette",l:"Courgettes",c:"Légumes & fruits",re:/courgette/},{k:"aubergine",l:"Aubergines",c:"Légumes & fruits",re:/aubergine/},
+ {k:"carotte",l:"Carottes",c:"Légumes & fruits",re:/carotte/},{k:"brocoli",l:"Brocoli",c:"Légumes & fruits",re:/brocoli/},{k:"chou",l:"Chou",c:"Légumes & fruits",re:/chou(?!croute|-fleur)|kale/},
+ {k:"choufleur",l:"Chou-fleur",c:"Légumes & fruits",re:/chou-fleur/},{k:"epinards",l:"Épinards",c:"Légumes & fruits",re:/épinard/},{k:"champi",l:"Champignons",c:"Légumes & fruits",re:/champignon/},
+ {k:"poireau",l:"Poireaux",c:"Légumes & fruits",re:/poireau/},{k:"courge",l:"Courge",c:"Légumes & fruits",re:/courge|butternut/},{k:"avocat",l:"Avocat",c:"Légumes & fruits",re:/avocat/},
+ {k:"citron",l:"Citron",c:"Légumes & fruits",re:/^citrons?( confit)?$/},{k:"citronv",l:"Citron vert",c:"Légumes & fruits",re:/citron vert/},{k:"herbes",l:"Herbes fraîches",c:"Légumes & fruits",re:/coriandre|persil|basilic|aneth/},
+ {k:"gingembre",l:"Gingembre frais",c:"Légumes & fruits",re:/gingembre frais/},{k:"concombre",l:"Concombre",c:"Légumes & fruits",re:/concombre/},{k:"salade",l:"Salade",c:"Légumes & fruits",re:/salade|roquette|frisée/},
+ {k:"feta",l:"Feta",c:"Crèmerie",re:/feta/},{k:"mozza",l:"Mozzarella",c:"Crèmerie",re:/mozzarella/},{k:"parmesan",l:"Parmesan",c:"Crèmerie",re:/parmesan/},
+ {k:"fromage",l:"Autres fromages",c:"Crèmerie",re:/cheddar|emmental|gruyère|reblochon|tomme/},{k:"yaourt",l:"Yaourt",c:"Crèmerie",re:/yaourt/},{k:"creme",l:"Crème",c:"Crèmerie",re:/crème/},
+ {k:"lait",l:"Lait",c:"Crèmerie",re:/^lait$/},{k:"beurre",l:"Beurre",c:"Crèmerie",re:/^beurre$/},{k:"tofu",l:"Tofu",c:"Crèmerie",re:/tofu/},
+ {k:"coco",l:"Lait de coco",c:"Placard",re:/lait de coco/},{k:"mais",l:"Maïs",c:"Placard",re:/maïs/},{k:"olives",l:"Olives",c:"Placard",re:/olives/}
 ];
+const FCATS=[...new Set(FRIGO.map(f=>f.c))];
+const fhit=(f,name)=>f.re.test(name.toLowerCase());
 const JOURS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 const COUNT=["","boîte","gousse","pot","botte","sachet","morceau","boule","cube"];
 const KEY="carnet-menus-v2",OLDKEY="carnet-menus-v1";
@@ -1934,7 +1992,7 @@ ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'
 };
 const icon=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 
-function fresh(){return{hist:[],rate:{},skin:"mamie",hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
+function fresh(){return{excl:[],dislike:[],hist:[],rate:{},skin:"mamie",hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
 function normalize(o){
   const s=fresh();if(!o||typeof o!=="object")return s;
   if(Number.isInteger(o.p))s.p=Math.min(8,Math.max(1,o.p));
@@ -1944,6 +2002,8 @@ function normalize(o){
   s.mine.forEach(r=>{if(r.dd&&!r.d)Object.defineProperty(r,"d",{value:r.dd,enumerable:false,writable:true})});
   if(o.hidden&&typeof o.hidden==="object")s.hidden=o.hidden;
   if(o.skin==="futur"||o.skin==="mamie")s.skin=o.skin;
+  if(Array.isArray(o.excl))s.excl=o.excl.filter(k=>typeof k==="string");
+  if(Array.isArray(o.dislike))s.dislike=o.dislike.filter(k=>typeof k==="string").slice(0,30);
   if(Array.isArray(o.hist))s.hist=o.hist.filter(h=>h&&typeof h.id==="string"&&Number.isFinite(h.t)).slice(-300);
   if(o.rate&&typeof o.rate==="object")Object.entries(o.rate).forEach(([k,v])=>{v=Math.round(+v);if(v>=1&&v<=5)s.rate[k]=v});
   if(o.cfg&&typeof o.cfg==="object")s.cfg={quick:!!o.cfg.quick,fish:!!o.cfg.fish,veg:Math.min(4,Math.max(0,+o.cfg.veg||0))};
@@ -1954,7 +2014,8 @@ let S;
 try{S=JSON.parse(localStorage.getItem(KEY))||JSON.parse(localStorage.getItem(OLDKEY))}catch(e){S=null}
 S=normalize(S);
 const SKINS={mamie:"Carnet de grand-mère",futur:"Cuisine du futur"};
-function applySkin(){document.documentElement.dataset.skin=SKINS[S.skin]?S.skin:"mamie"}
+function applySkin(){document.documentElement.dataset.skin=SKINS[S.skin]?S.skin:"mamie";
+  try{const SB=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.StatusBar;if(SB){const f=S.skin==="futur";SB.setBackgroundColor({color:f?"#060914":"#fffaf0"});SB.setStyle({style:f?"DARK":"LIGHT"})}}catch(e){}}
 applySkin();
 const all=()=>[...R,...S.mine];
 let GEN=[];
@@ -1988,15 +2049,15 @@ const todayIdx=()=>(new Date().getDay()+6)%7;
 const fmtDate=d=>d.toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
 const fmtT=t=>t>=90?Math.floor(t/60)+" h"+(t%60?" "+String(t%60).padStart(2,"0"):""):t+" min";
 const short=n=>n.split(/[,(]/)[0].trim();
-const matchesFrigo=nom=>{const n=nom.toLowerCase();return FRIGO.some(f=>S.frigo.includes(f.k)&&f.t.some(t=>n.includes(t)))};
-const frigoScore=r=>FRIGO.filter(f=>S.frigo.includes(f.k)&&r.ing.some(i=>f.t.some(t=>i[0].toLowerCase().includes(t)))).length;
+const matchesFrigo=nom=>FRIGO.some(f=>S.frigo.includes(f.k)&&fhit(f,nom));
+const frigoScore=r=>FRIGO.filter(f=>S.frigo.includes(f.k)&&r.ing.some(i=>fhit(f,i[0]))).length;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const ids=()=>S.week.map(w=>w.d);
 
 function pickFor(i,arr,cat){
   const used=new Set(arr.filter((x,j)=>x&&j!==i));
   const nb=[arr[i-1],arr[i+1]].map(x=>x&&byId(x)).filter(Boolean).map(r=>r.prot);
-  let pool=all().filter(r=>!S.ban.includes(r.id)&&!used.has(r.id)&&r.id!==arr[i]);
+  let pool=all().filter(r=>!S.ban.includes(r.id)&&!excluded(r)&&!used.has(r.id)&&r.id!==arr[i]);
   const narrow=(p,fn)=>{const n=p.filter(fn);return n.length?n:p};
   if(cat==="poisson")pool=narrow(pool,r=>r.prot==="poisson");
   else if(cat==="veg")pool=narrow(pool,isVeg);
@@ -2069,6 +2130,77 @@ const fmtDay=t=>new Date(t).toLocaleDateString("fr-FR",{day:"numeric",month:"sho
 function cookedBlock(r){
   const h=cookedOf(r.id);
   return `<div class="cooked"><div><b>${h.length?`Cuisiné ${h.length} fois`:"Pas encore cuisiné"}</b><small>${h.length?`Dernière fois le ${fmtDay(h[h.length-1].t)}`:"Notez-le après l’avoir fait"}</small></div><button class="btn ghost small" data-cooked="${esc(r.id)}">${icon("check")}J’ai cuisiné ce plat</button></div>`;
+}
+
+
+/* ---------- Cuisiner avec ce que j'ai ---------- */
+const BASIC=/^ail$|bouillon|farine|sucre|vinaigre|miel|concentré|chapelure|fécule|levure|bouquet garni|laurier|girofle/i;
+function pantryMatch(r){
+  const imp=r.ing.filter(i=>i[3]!=="S"&&!BASIC.test(i[0]));
+  const sel=FRIGO.filter(f=>S.frigo.includes(f.k));
+  const have=imp.filter(i=>sel.some(f=>fhit(f,i[0])));
+  return{have:have.length,tot:imp.length||1,miss:imp.filter(i=>!have.includes(i)).map(i=>i[0])};
+}
+function pantryResults(){
+  if(!S.frigo.length)return `<p class="empty">Touchez les ingrédients que vous avez : les recettes réalisables apparaissent ici, les plus complètes en premier.</p>`;
+  const l=all().filter(r=>!S.ban.includes(r.id)&&!excluded(r)).map(r=>({r,m:pantryMatch(r)})).filter(x=>x.m.have>0)
+    .sort((a,b)=>(b.m.have/b.m.tot)-(a.m.have/a.m.tot)||b.m.have-a.m.have).slice(0,30);
+  if(!l.length)return `<p class="empty">Aucune recette n’utilise ces ingrédients. Ajoutez-en d’autres.</p>`;
+  return `<span class="note">${l.length} recette${l.length>1?"s":""}, triées par ce que vous avez déjà</span><div class="similar">${l.map(({r,m})=>{const pc=Math.round(m.have/m.tot*100);
+    return `<button class="pres" data-open="${esc(r.id)}"><span class="pres-p">${plate(r)}</span><span class="pres-t"><b>${esc(r.nom)}</b><span class="pbar"><i style="width:${pc}%"></i></span><small>${m.miss.length?`Il manque : ${esc(m.miss.slice(0,4).join(", "))}${m.miss.length>4?"…":""}`:"Vous avez tout"}</small></span><span class="pres-pc">${pc} %</span></button>`}).join("")}</div>`;
+}
+function pantryChips(q){
+  q=(q||"").trim().toLowerCase();
+  return FCATS.map(c=>{const l=FRIGO.filter(f=>f.c===c&&(!q||f.l.toLowerCase().includes(q)));if(!l.length)return"";
+    return `<span class="fcat">${esc(c)}</span>`+l.map(f=>`<button class="chip leaf" data-pan="${f.k}" aria-pressed="${S.frigo.includes(f.k)}">${esc(f.l)}</button>`).join("")}).join("")||`<p class="note">Aucun ingrédient ne correspond.</p>`;
+}
+function openPantry(){
+  sheet(`<div class="sheet-head"><h2>Avec ce que j’ai</h2>${closeBtn}</div>
+    <p class="note" style="margin:0">Cochez ce qu’il y a dans votre frigo et vos placards. Sel, huile, ail, épices et basiques sont supposés présents.</p>
+    <div class="searchwrap">${icon("search")}<input type="search" id="panq" placeholder="Filtrer les ingrédients…" autocomplete="off" aria-label="Filtrer les ingrédients"></div>
+    <div class="chips pchips" id="panChips">${pantryChips("")}</div>
+    <div class="row"><button class="btn ghost small" id="panClear">Tout décocher</button><span class="note" id="panCount">${S.frigo.length} ingrédient${S.frigo.length>1?"s":""} cochés</span></div>
+    <div id="panRes">${pantryResults()}</div>`,"Avec ce que j’ai");
+}
+
+/* ---------- Régimes, allergies, équipement ---------- */
+const DIETS=[
+ {k:"vege",l:"Végétarien",t:r=>!isVeg(r)},
+ {k:"porc",l:"Sans porc",t:r=>r.prot==="porc"||r.ing.some(i=>/lardon|ventrèche|jambon|porc|chorizo|saucisse|poitrine|échine|palette/i.test(i[0]))},
+ {k:"mer",l:"Sans poisson ni fruits de mer",t:r=>r.prot==="poisson"||r.ing.some(i=>/crevette|moule|anchois|nuoc|saumon|cabillaud|poisson|morue/i.test(i[0]))},
+ {k:"lactose",l:"Sans lactose",t:r=>r.ing.some(i=>/^lait$|lait(?! de coco)|crème|beurre|fromage|feta|parmesan|mozzarella|cheddar|emmental|gruyère|reblochon|tomme|yaourt|paneer/i.test(i[0]))},
+ {k:"gluten",l:"Sans gluten (approximatif)",t:r=>r.ing.some(i=>/farine(?! de (maïs|sarrasin))|pâte(?! de (tamarin|curry|piment))|pâtes|penne|orecchiette|nouilles de blé|macaroni|tagliatelle|lasagne|vermicelles(?! de riz)|pain|chapelure|panko|tortillas de blé|semoule|bière|gnocchi|filo|gyoza|sauce soja|worcestershire/i.test(i[0]))},
+ {k:"nofour",l:"Je n’ai pas de four",t:r=>!!r.four}
+];
+function excluded(r){
+  if(S.excl&&S.excl.length){for(const d of DIETS)if(S.excl.includes(d.k)&&d.t(r))return true}
+  if(S.dislike&&S.dislike.length){const n=r.ing.map(i=>i[0].toLowerCase());if(S.dislike.some(w=>n.some(x=>x.includes(w))))return true}
+  return false;
+}
+function dietText(){
+  const l=DIETS.filter(d=>S.excl&&S.excl.includes(d.k)).map(d=>d.l.toLowerCase().replace(" (approximatif)",""));
+  if(S.dislike&&S.dislike.length)l.push("sans : "+S.dislike.join(", "));
+  return l.length?" Contraintes de la personne à respecter impérativement : "+l.join(", ")+".":"";
+}
+
+
+/* ---------- Anti-gaspi : ce qui risque de rester après les courses ---------- */
+function wasteTips(items){
+  const inWeek=new Set(S.week.map(w=>w.d).filter(Boolean));
+  const out=[];
+  items.forEach(it=>{
+    if(it.ray==="X"||it.home||it.q==null)return;
+    const fresh=/F|C/.test(it.ray)&&(["botte","sachet","pot","boule"].includes(it.u)||/crème|lait de coco|feta|mozzarella|parmesan|yaourt|^chou|céleri|gingembre|coriandre|persil|basilic|aneth|épinard|champignon|concombre|salade|roquette|poireau|courge|butternut/i.test(it.nom));
+    if(!fresh||it.from.length>1)return;
+    const sug=all().filter(r=>!inWeek.has(r.id)&&!S.ban.includes(r.id)&&!excluded(r)&&r.ing.some(i=>i[0]===it.nom)).sort((a,b)=>(rateOf(b.id)-rateOf(a.id))||(seasonal(b)-seasonal(a))).slice(0,2);
+    if(sug.length)out.push({it,sug});
+  });
+  return out.slice(0,3);
+}
+function wasteCard(items){
+  const w=wasteTips(items);if(!w.length)return"";
+  return `<section class="waste"><div class="ai-head"><span class="ai-ic leafic">${icon("leaf")}</span><div><b>Anti-gaspi</b><span>Ces produits ne seront pas finis cette semaine. Idées pour les utiliser :</span></div></div>
+    ${w.map(({it,sug})=>`<div class="wrow"><b>${esc(it.nom)}</b><div class="chips">${sug.map(r=>`<button class="chip" data-open="${esc(r.id)}">${esc(short(r.nom))}</button>`).join("")}</div></div>`).join("")}</section>`;
 }
 
 /* ---------- Rendu ---------- */
@@ -2191,8 +2323,9 @@ function viewCourses(){
   if(!items.length)return `<div class="view"><p class="empty">Aucun dîner prévu cette semaine, donc rien à acheter.</p>${addForm()}</div>`;
   return `<div class="view">
     <div class="progress-card"><div class="row" style="justify-content:space-between"><span class="label">Dans le chariot</span><span class="iqty" id="progTxt">${done} / ${total}</span></div><div class="progress"><i id="progBar" style="width:${total?Math.round(done/total*100):0}%"></i></div></div>
-    <div class="row" style="flex-wrap:nowrap"><button class="btn wide" id="copy">${icon("copy")}Copier la liste</button><button class="iconbtn" id="uncheck" aria-label="Tout décocher">${icon("reset")}</button></div>
+    <div class="row" style="flex-wrap:nowrap"><button class="btn wide" id="copy">${icon("copy")}${SHARE()?"Partager la liste":"Copier la liste"}</button><button class="iconbtn" id="uncheck" aria-label="Tout décocher">${icon("reset")}</button></div>
     ${addForm()}
+    ${wasteCard(items)}
     ${groups}
     ${shopping.hiddenCount?`<button class="btn ghost small" id="restoreHidden">Réafficher ${shopping.hiddenCount} article${shopping.hiddenCount>1?"s":""} retiré${shopping.hiddenCount>1?"s":""}</button>`:""}
     <p class="note">Glissez un article vers la gauche pour le retirer.</p>
@@ -2212,7 +2345,9 @@ function updateCourses(){
 const FILTERS=["Toutes","Favoris","Pour vous","De saison","Mieux notées","Déjà cuisinées","Légères","Rapides","Sans viande","Poisson","Au four","Mes recettes","Exclues"];
 function filtered(){
   const q=UI.q.trim().toLowerCase(),f=UI.filter;
+  UI.exclCount=0;
   const l=all().filter(r=>{
+    if(f!=="Exclues"&&excluded(r)){UI.exclCount++;return false}
     if(f==="Favoris"&&!S.fav.includes(r.id))return false;
     if(f==="Rapides"&&r.temps>30)return false;
     if(f==="Légères"&&nutrition(r).kcal>600)return false;
@@ -2245,7 +2380,7 @@ const PAGE=24;
 function listHTML(){
   const l=filtered();UI.list=l;UI.shown=Math.min(PAGE,l.length);
   if(!l.length)return `<p class="empty">${UI.filter==="Pour vous"&&!S.fav.length?"Mettez quelques recettes en favori ★ : celles qui leur ressemblent (même région, même viande, ingrédients en commun) apparaîtront ici.":"Aucune recette ne correspond."}</p>`;
-  return `<span class="note">${l.length} recette${l.length>1?"s":""}${UI.filter==="Pour vous"?", classées selon vos favoris":""}</span>`+`<div class="tgrid" id="tgrid">${l.slice(0,UI.shown).map(tile).join("")}</div>${l.length>UI.shown?`<div id="more" class="more" aria-hidden="true"></div>`:""}`;
+  return `<span class="note">${l.length} recette${l.length>1?"s":""}${UI.filter==="Pour vous"?", classées selon vos favoris":""}${UI.exclCount?` · ${UI.exclCount} masquée${UI.exclCount>1?"s":""} par vos préférences alimentaires`:""}</span>`+`<div class="tgrid" id="tgrid">${l.slice(0,UI.shown).map(tile).join("")}</div>${l.length>UI.shown?`<div id="more" class="more" aria-hidden="true"></div>`:""}`;
 }
 let MORE_IO=null;
 function hookMore(){
@@ -2259,7 +2394,7 @@ function hookMore(){
 function refreshList(){const rl=document.getElementById("rlist");if(rl){rl.innerHTML=listHTML();hookMore()}}
 const pickBanner=()=>UI.pick!=null?`<div class="banner"><span>Dîner de <strong>${JOURS[UI.pick]}</strong> : touchez une recette</span><button class="btn ghost small" id="cancelPick">Annuler</button></div>`:"";
 function viewRecettes(){
-  return `<div class="view">${pickBanner()}${UI.pick==null?fridgeCta()+aiCard():""}
+  return `<div class="view">${pickBanner()}${UI.pick==null?`<button class="pantry-cta" id="openPantry"><span class="fc-ic leafic">${icon("jar")}</span><span class="fc-txt"><b>Avec ce que j’ai</b><span>${S.frigo.length?`${S.frigo.length} ingrédient${S.frigo.length>1?"s":""} cochés · voir les recettes faisables`:"Cochez vos ingrédients, l’appli trouve les recettes"}</span></span>${icon("chev")}</button>`+fridgeCta()+aiCard():""}
     <div class="searchbar"><div class="srow2"><div class="searchwrap">${icon("search")}<input type="search" id="search" placeholder="Recette, ingrédient, région…" value="${esc(UI.q)}" aria-label="Rechercher" autocomplete="off"></div><button class="iconbtn dice" id="surprise" aria-label="Surprends-moi : une recette au hasard">${icon("dice")}</button></div>
       <div class="chips scroll" role="group" aria-label="Filtres">${FILTERS.map(c=>`<button class="chip" data-filter="${esc(c)}" aria-pressed="${UI.filter===c}">${c==="Favoris"?"★ Favoris":esc(c)}</button>`).join("")}</div></div>
     <div class="rlist" id="rlist">${listHTML()}</div></div>`;
@@ -2270,7 +2405,7 @@ function viewTerroirs(){
     <div class="seg" role="group" aria-label="Zone"><button data-zone="France" aria-pressed="${UI.zone==="France"}">France</button><button data-zone="Monde" aria-pressed="${UI.zone==="Monde"}">Monde</button></div>
     <div class="chips scroll">${regs.map((rg,i)=>`<button class="chip" data-jump="reg${i}">${esc(rg)}</button>`).join("")}</div>
     <p class="note">Plats rustiques, souvent mijotés : idéals le week-end, et meilleurs réchauffés avec l’option restes du midi.</p>
-    ${regs.map((rg,i)=>{const l=TERROIR.filter(r=>r.region===rg);return `<div class="region" id="reg${i}" style="--tint:hsl(${hsh(rg)%360} 55% 45%)"><div class="rbanner"><div class="rb-txt"><span class="eyebrow">${UI.zone==="France"?"Terroir français":"Cuisine du monde"}</span><h3>${esc(rg)}</h3><span class="rb-n">${l.length} plat${l.length>1?"s":""} · ${esc(short(l[0].nom))}${l[1]?", "+esc(short(l[1].nom)):""}…</span></div><div class="stack">${l.slice(0,3).map(r=>plate(r)).join("")}</div></div><div class="carousel">${l.map(tile).join("")}</div></div>`}).join("")}
+    ${regs.map((rg,i)=>{const l=TERROIR.filter(r=>r.region===rg&&!excluded(r));if(!l.length)return"";return `<div class="region" id="reg${i}" style="--tint:hsl(${hsh(rg)%360} 55% 45%)"><div class="rbanner"><div class="rb-txt"><span class="eyebrow">${UI.zone==="France"?"Terroir français":"Cuisine du monde"}</span><h3>${esc(rg)}</h3><span class="rb-n">${l.length} plat${l.length>1?"s":""} · ${esc(short(l[0].nom))}${l[1]?", "+esc(short(l[1].nom)):""}…</span></div><div class="stack">${l.slice(0,3).map(r=>plate(r)).join("")}</div></div><div class="carousel">${l.map(tile).join("")}</div></div>`}).join("")}
   </div>`;
 }
 
@@ -2320,7 +2455,7 @@ function sheetTab(r){
     const before=[r.four?`Préchauffer le four à ${r.four} °C`:"",d?`Sortir : ${d.ust.toLowerCase()}`:"",r.veille?"Penser à la préparation de la veille (étape 1)":""].filter(Boolean);
     return `${before.length?`<div class="callout">${icon("list")}<div><b>Avant de commencer</b><ul>${before.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>`:""}
     <button class="btn wide" data-cookmode="${esc(r.id)}">${icon("play")}Mode cuisine plein écran</button>
-    <ol class="steps">${r.steps.map(([t,mn])=>`<li data-step><div><span class="stxt">${esc(t)}</span>${mn>=2?`<br><button class="tbtn" data-timer="${mn}" data-tlabel="${esc(t.slice(0,40))}">${icon("timer")}${fmtT(mn)}</button>`:""}</div></li>`).join("")}</ol>
+    <ol class="steps">${r.steps.map(([t,mn])=>`<li data-step><div><span class="stxt">${esc(t)}</span>${(()=>{const si=stepIngs(r,t,(UI.viewP||S.p)/2);return si?`<span class="sings mini">${si}</span>`:""})()}${mn>=2?`<br><button class="tbtn" data-timer="${mn}" data-tlabel="${esc(t.slice(0,40))}">${icon("timer")}${fmtT(mn)}</button>`:""}</div></li>`).join("")}</ol>
     ${d?`<div class="callout tip">${icon("sparkle")}<div><b>Astuce du chef</b><p>${esc(d.astuce)}</p></div></div>`:""}
     <p class="note">Touchez une étape pour la cocher.</p>`;
   }
@@ -2345,11 +2480,12 @@ function openDayMenu(i){
       <button data-pick="${i}" data-close>${icon("list")}Choisir dans les recettes</button>
       ${i<6?`<button data-x2="${i}" aria-pressed="${w.x2}">${icon("bowl")}${w.x2?"✓ Restes prévus pour le midi de "+JOURS[i+1].toLowerCase():"Doubler pour le midi de "+JOURS[i+1].toLowerCase()}</button>`:""}
       <button class="danger" data-clear="${i}" data-close>${icon("trash")}Retirer du menu</button>
-    </div>`,JOURS[i]);
+    </div>
+    <div class="group"><span class="label">Déplacer ou échanger avec</span><div class="week7">${JOURS.map((j,k)=>`<button class="daybtn${k===i?" here":S.week[k].d?" taken":""}" data-moveto="${i}|${k}" ${k===i?"disabled":""} aria-label="${k===i?j:"Échanger avec "+j}">${j.slice(0,1)}<small>${weekDates()[k].getDate()}</small></button>`).join("")}</div></div>`,JOURS[i]);
 }
 
 function openSettings(){
-  const chips=FRIGO.map(f=>`<button class="chip leaf" data-frigo="${f.k}" aria-pressed="${S.frigo.includes(f.k)}">${esc(f.l)}</button>`).join("");
+  const chips=FCATS.map(c=>`<span class="fcat">${esc(c)}</span>`+FRIGO.filter(f=>f.c===c).map(f=>`<button class="chip leaf" data-frigo="${f.k}" aria-pressed="${S.frigo.includes(f.k)}">${esc(f.l)}</button>`).join("")).join("");
   sheet(`<div class="sheet-head"><h2>Réglages</h2>${closeBtn}</div>
     <div class="setrow"><span><strong>Personnes</strong><br><span class="note">Toutes les quantités s’adaptent</span></span><div class="stepper"><button id="pMinus" aria-label="Une personne de moins">−</button><output id="pOut">${S.p}</output><button id="pPlus" aria-label="Une personne de plus">+</button></div></div>
     <div class="group"><span class="label">Déjà au frigo ou au placard</span><div class="chips">${chips}</div><span class="note">Ces recettes passent en priorité, et ces ingrédients sont marqués « à la maison ».</span></div>
@@ -2372,7 +2508,7 @@ function histBlock(){
     ${top.length?`<span class="label">Vos préférés</span><div class="chips">${top.map(([k,v])=>`<button class="chip" data-open="${esc(k)}">${"★".repeat(v)} ${esc(short(byId(k).nom))}</button>`).join("")}</div>`:""}`;
 }
 function viewReglages(){
-  const chips=FRIGO.map(f=>`<button class="chip leaf" data-frigo="${f.k}" aria-pressed="${S.frigo.includes(f.k)}">${esc(f.l)}</button>`).join("");
+  const chips=FCATS.map(c=>`<span class="fcat">${esc(c)}</span>`+FRIGO.filter(f=>f.c===c).map(f=>`<button class="chip leaf" data-frigo="${f.k}" aria-pressed="${S.frigo.includes(f.k)}">${esc(f.l)}</button>`).join("")).join("");
   const hid=Object.keys(S.hidden||{}).length,nb=all().length;
   const card=(k,txt,sub)=>`<button class="skincard sk-${k}" data-skin="${k}" aria-pressed="${S.skin===k}"><span class="sk-prev" aria-hidden="true"><i class="sk-bar"></i><i class="sk-card"><b></b><em></em><u></u></i><i class="sk-plate"></i></span><span class="sk-txt"><b>${txt}</b><span>${sub}</span></span><span class="sk-check" aria-hidden="true">${icon("check")}</span></button>`;
   return `<div class="view settings">
@@ -2382,6 +2518,11 @@ function viewReglages(){
     <section class="sgroup"><span class="label">Mon carnet</span>${histBlock()}</section>
     <section class="sgroup"><span class="label">À table</span>
       <div class="srow"><span><b>Personnes par défaut</b><small>Toutes les quantités s’adaptent</small></span><div class="stepper"><button id="pMinus" aria-label="Une personne de moins">−</button><output id="pOut">${S.p}</output><button id="pPlus" aria-label="Une personne de plus">+</button></div></div></section>
+    <section class="sgroup"><span class="label">Régime, allergies et équipement</span>
+      <div class="chips">${DIETS.map(d=>`<button class="chip leaf" data-diet="${d.k}" aria-pressed="${S.excl.includes(d.k)}">${esc(d.l)}</button>`).join("")}</div>
+      <form class="addrow" id="dislikeForm"><input type="text" id="dislikeIn" placeholder="Un ingrédient que vous n’aimez pas (coriandre…)" maxlength="30" autocomplete="off" aria-label="Ingrédient à éviter"><button class="btn small" type="submit">Éviter</button></form>
+      ${S.dislike.length?`<div class="chips">${S.dislike.map((w,i)=>`<button class="chip" data-undislike="${i}" aria-label="Ne plus éviter ${esc(w)}">${esc(w)} ✕</button>`).join("")}</div>`:""}
+      <span class="note">Ces recettes sont masquées partout et jamais proposées. Claude respecte aussi ces contraintes quand il écrit une recette. Le filtre sans gluten repère les ingrédients courants, vérifiez toujours les étiquettes.</span></section>
     <section class="sgroup"><span class="label">Générer la semaine</span>
       <div class="chips"><button class="chip leaf" data-cfg="quick" aria-pressed="${S.cfg.quick}">Rapide en semaine (≤ 40 min)</button><button class="chip leaf" data-cfg="fish" aria-pressed="${S.cfg.fish}">1 soir poisson minimum</button></div>
       <div class="srow"><span><b>Soirs sans viande</b><small>Par semaine générée</small></span><div class="stepper"><button id="vMinus" aria-label="Un de moins">−</button><output id="vOut">${S.cfg.veg}</output><button id="vPlus" aria-label="Un de plus">+</button></div></div></section>
@@ -2413,6 +2554,7 @@ function openForm(){
       <span class="err" id="formErr"></span>
       <button class="btn" type="submit">Enregistrer la recette</button>
     </form>`,"Nouvelle recette");
+  if(AI.ok){const f=document.getElementById("recipeForm");f.insertAdjacentHTML("beforebegin",`<div class="importbox"><span class="label">Ou collez une recette trouvée ailleurs</span><textarea id="impText" rows="4" placeholder="Copiez le texte d’une recette (site, message, livre…) et collez-le ici : Claude la met au format du carnet, avec étapes, minuteurs et calories."></textarea><div class="row"><button class="btn small" id="impGo">${icon("sparkle")}Mettre en forme</button><span class="err" id="impErr"></span></div></div>`)}
 }
 const UNIT_MAP={g:["g",1],kg:["g",1000],ml:["ml",1],cl:["ml",10],l:["ml",1000],"c.s.":["c.s.",1],"cs":["c.s.",1],"c.c.":["c.c.",1],"cc":["c.c.",1],"boîte":["boîte",1],"boîtes":["boîte",1],"gousse":["gousse",1],"gousses":["gousse",1],"pot":["pot",1],"pots":["pot",1],"botte":["botte",1],"bottes":["botte",1],"sachet":["sachet",1],"sachets":["sachet",1],"morceau":["morceau",1],"morceaux":["morceau",1],"boule":["boule",1],"boules":["boule",1],"cube":["cube",1],"cubes":["cube",1],"pincée":["pincée",1],"pincées":["pincée",1]};
 function guessRay(n){n=n.toLowerCase();
@@ -2450,21 +2592,26 @@ let T=null,ac=null;
 function beep(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
   [0,.35,.7].forEach(t=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;o.connect(g);g.connect(ac.destination);
   g.gain.setValueAtTime(.0001,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.3,ac.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+t+.3);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.32)})}catch(e){}}
+let TIMERS=[],TIV=null,TID=0;
 function startTimer(min,label){
   try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();ac.resume&&ac.resume()}catch(e){}
   try{navigator.wakeLock&&navigator.wakeLock.request("screen").catch(()=>{})}catch(e){}
-  if(T)clearInterval(T.iv);
-  T={end:Date.now()+min*60000,label,rang:false};T.iv=setInterval(drawTimer,500);drawTimer();toast(`Minuteur ${min} min lancé`);
+  TIMERS.push({id:++TID,end:Date.now()+min*60000,label,rang:false});if(TIMERS.length>4)TIMERS.shift();
+  if(!TIV)TIV=setInterval(drawTimer,500);drawTimer();toast(`Minuteur ${min} min lancé`+(TIMERS.length>1?` (${TIMERS.length} en cours)`:""));
 }
+function stopTimer(id){TIMERS=TIMERS.filter(t=>t.id!==id);if(!TIMERS.length){clearInterval(TIV);TIV=null}drawTimer()}
 function drawTimer(){
   const slot=document.getElementById("timerSlot");
-  if(!T){slot.innerHTML="";return}
-  const ms=Math.max(0,T.end-Date.now()),s=Math.ceil(ms/1000);
-  if(ms===0&&!T.rang){T.rang=true;beep()}
-  const txt=ms?`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`:"C’est prêt";
-  slot.innerHTML=`<div class="timer${ms?"":" ring"}" role="timer" aria-live="polite"><span class="tv">${txt}</span><span class="tl">${esc(T.label)}…</span><button id="stopTimer">${ms?"Arrêter":"OK"}</button></div>`;
+  if(!TIMERS.length){slot.innerHTML="";return}
+  const now=Date.now();
+  slot.innerHTML=`<div class="timers">${TIMERS.slice().sort((a,b)=>a.end-b.end).map(T=>{const ms=Math.max(0,T.end-now),s=Math.ceil(ms/1000);
+    if(ms===0&&!T.rang){T.rang=true;beep();try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(_){}}
+    const txt=ms?`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`:"C’est prêt";
+    return `<div class="timer${ms?"":" ring"}" role="timer" aria-live="polite"><span class="tv">${txt}</span><span class="tl">${esc(T.label)}…</span><button data-stoptimer="${T.id}">${ms?"Arrêter":"OK"}</button></div>`}).join("")}</div>`;
 }
 function toast(msg){const s=document.getElementById("toastSlot");s.innerHTML=`<div class="toast" role="status">${esc(msg)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>s.innerHTML="",2200)}
+const SHARE=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Share;
+function shareOrCopy(txt,title,okMsg){const SH=SHARE();if(SH){SH.share({title,text:txt,dialogTitle:title}).catch(()=>{});return}copy(txt,okMsg)}
 function copy(txt,okMsg){
   const fallback=()=>{const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();
     let ok=false;try{ok=document.execCommand("copy")}catch(_){}ta.remove();toast(ok?okMsg:"Copie impossible ici")};
@@ -2576,7 +2723,7 @@ async function runFridge(){
   const prompt=`Tu es un chef qui aide à cuisiner avec ce qu'on a. Les images sont des photos du frigo et éventuellement du placard d'une personne.
 
 1. Liste les ingrédients que tu identifies clairement sur les photos, en noms simples en français (ex. "poivrons rouges", "œufs", "yaourt nature"). N'invente rien que tu ne vois pas.
-2. Propose 3 dîners variés, réalisables surtout avec ces ingrédients, plus les basiques de placard (huile, sel, poivre, épices courantes, farine, sucre, vinaigre). Privilégie la cuisson au four et les sauces légères, cuisines du monde bienvenues.${wish?` Contraintes demandées : ${wish}.`:""}
+2. Propose 3 dîners variés${dietText()} réalisables surtout avec ces ingrédients, plus les basiques de placard (huile, sel, poivre, épices courantes, farine, sucre, vinaigre). Privilégie la cuisson au four et les sauces légères, cuisines du monde bienvenues.${wish?` Contraintes demandées : ${wish}.`:""}
 3. Dans le carnet ci-dessous, choisis jusqu'à 3 identifiants de recettes faisables surtout avec ces ingrédients (liste vide si aucune).
 
 Quantités pour 2 personnes. Pour chaque ingrédient : "u" parmi "g","ml","","c.s.","c.c.","boîte","gousse","pot","botte","sachet","morceau","boule","cube" ("" = à l'unité) ; "rayon" parmi F (fruits et légumes), B (boucherie, poisson), C (crèmerie, frais), E (épicerie), S (épices et sauces), P (boulangerie) ; "dispo" = true si visible sur les photos, false s'il faut l'acheter. N'inclus pas huile, sel, poivre. "prot" parmi : ${PROTS.join(", ")}. "four" = température en °C ou null. "min" = minutes d'attente ou de cuisson de l'étape (0 si aucune).
@@ -2618,12 +2765,25 @@ function saveGen(id){
 }
 function syncFrigo(){
   const seen=(FR.result&&FR.result.seen||[]).map(s=>s.toLowerCase());let n=0;
-  FRIGO.forEach(f=>{const hit=seen.some(s=>f.t.some(t=>s.includes(t))||s.includes(f.l.toLowerCase()));if(hit&&!S.frigo.includes(f.k)){S.frigo.push(f.k);n++}});
+  FRIGO.forEach(f=>{const hit=seen.some(s=>f.re.test(s)||s.includes(f.l.toLowerCase()));if(hit&&!S.frigo.includes(f.k)){S.frigo.push(f.k);n++}});
   save();render();toast(n?`${n} ingrédient${n>1?"s":""} ajouté${n>1?"s":""} à « Déjà au frigo »`:"Rien de nouveau à ajouter");
 }
 
 
 /* ---------- Mode cuisine plein écran ---------- */
+const STOPW=new Set("frais fraîche fraîches cru crue crues cuisse cuisses filet filets haut hauts désossés désossé pavé pavés tranche tranches branche branches feuille feuilles plat côtes épis brin type défaut papa petit petits petite grande gros nature rouge rouges vert verte verts blanc blancs blanche noir noirs noire noires sec secs séchées séché poudre moulu flocons boîte boîtes surgelés pâte chair farineuse jaunes jaune doux douce douces fumée fumé demi-sel entier pour avec dans sans".split(" "));
+const ING_RE=new Map();
+function ingKeys(name){
+  if(ING_RE.has(name))return ING_RE.get(name);
+  const w=name.toLowerCase().replace(/\(.*?\)/g," ").split(/[^\p{L}-]+/u).filter(x=>x.length>=3&&!STOPW.has(x)&&!/^(de|du|des|la|le|les|et|ou|à|au|aux|d’|l’)$/.test(x));
+  const res=w.slice(0,3).map(x=>{const st=x.replace(/(s|x)$/,"");return new RegExp("(?<![\\p{L}])"+st.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(s|x|e|es)?(?![\\p{L}])","iu")});
+  ING_RE.set(name,res);return res;
+}
+function stepIngs(r,text,f){
+  const t=text.toLowerCase();
+  return r.ing.filter(([n])=>ingKeys(n).some(re=>re.test(t))).map(([n,q,u])=>`<span class="sing"><b>${fmtQ(q*f,u)}</b> ${esc(n)}</span>`).join("");
+}
+
 let WL=null;
 function openCook(id,p){
   const r=byId(id);if(!r)return;closeSheet();UI.cook={id,i:0,ing:false,p:p||S.p};document.body.classList.add("cooking");
@@ -2651,7 +2811,7 @@ function drawCook(){
     <div class="cook-top"><button class="iconbtn flat" id="cookClose" aria-label="Quitter le mode cuisine">${icon("x")}</button><span class="cook-name">${esc(short(r.nom))}</span>${VOICE?`<button class="iconbtn flat" id="cookVoice" aria-pressed="${!!c.voice}" aria-label="${c.voice?"Arrêter la lecture à voix haute":"Lire les étapes à voix haute"}">${icon(c.voice?"volume":"mute")}</button>`:""}<button class="pill" id="cookIng" aria-pressed="${c.ing}">${c.ing?"Étapes":"Ingrédients"}</button></div>
     <div class="cook-bar">${r.steps.map((_,k)=>`<i class="${k<c.i?"done":k===c.i?"cur":""}"></i>`).join("")}</div>
     ${c.ing?`<div class="cook-body"><span class="eyebrow">Ingrédients · ${c.p} pers.</span><ul class="ing big">${r.ing.map(([nm,q,u])=>`<li><span>${esc(nm)}</span><span class="iqty">${fmtQ(q*f,u)}</span></li>`).join("")}</ul></div>`
-    :`<div class="cook-body" id="cookBody">${orb(r,"lg")}<span class="eyebrow">Étape ${c.i+1} sur ${n}</span><p class="cook-txt">${esc(t)}</p>
+    :`<div class="cook-body" id="cookBody">${orb(r,"lg")}<span class="eyebrow">Étape ${c.i+1} sur ${n}</span><p class="cook-txt">${esc(t)}</p>${(()=>{const si=stepIngs(r,t,f);return si?`<div class="sings"><span class="label">Pour cette étape</span><div>${si}</div></div>`:""})()}
       ${mn>=2?`<button class="btn cook-timer" data-timer="${mn}" data-tlabel="${esc(t.slice(0,40))}">${icon("timer")}Lancer ${fmtT(mn)}</button>`:""}
       ${last&&r.d?`<div class="callout tip">${icon("sparkle")}<div><b>Astuce du chef</b><p>${esc(r.d.astuce)}</p></div></div>`:""}</div>`}
     <div class="cook-nav"><button class="btn ghost" id="cookPrev" ${c.i===0||c.ing?"disabled":""}>Précédent</button><button class="btn" id="cookNext" ${c.ing?"disabled":""}>${last?"Terminé ✓":"Suivant"}</button></div>
@@ -2701,7 +2861,7 @@ async function runAI(q){
   AI.q=q;AI.status="busy";AI.err="";render();AI.ctl=new AbortController();
   const fut=AI.mode==="futur";
   const prompt=`${fut?`Invente une recette de dîner originale et futuriste, inspirée de : « ${q} ». Elle doit être créative (associations inattendues, textures, couleurs) mais entièrement réalisable dans une cuisine ordinaire, avec des ingrédients trouvables en France (supermarché ou épicerie spécialisée). Donne-lui un nom évocateur.`:`Donne la recette authentique et traditionnelle correspondant à : « ${q} ». Si c'est un pays ou une région, choisis un de ses plats emblématiques. Reste fidèle à la tradition ; si un ingrédient est introuvable en France, propose le substitut le plus proche dans le nom de l'ingrédient.`}
-Privilégie la cuisson au four quand c'est fidèle au plat, pas de friture profonde. Quantités pour 2 personnes. Écris en français.
+Privilégie la cuisson au four quand c'est fidèle au plat, pas de friture profonde.${dietText()} Quantités pour 2 personnes. Écris en français.
 Pour chaque ingrédient : "u" parmi "g","ml","","c.s.","c.c.","boîte","gousse","pot","botte","sachet","morceau","boule","cube" ("" = à l'unité) ; "rayon" parmi F (fruits et légumes), B (boucherie, poisson), C (crèmerie, frais), E (épicerie), S (épices et sauces), P (boulangerie). N'inclus pas huile, sel, poivre. "prot" parmi : ${PROTS.join(", ")}. "four" = température en °C ou null. Chaque étape a "min" = minutes d'attente ou de cuisson (0 si aucune). "d" = {"prep": minutes, "cuis": minutes, "diff": 1 à 3, "ust": "ustensiles", "astuce": "une astuce de chef concrète", "service": "accompagnement", "conserv": "conservation"}. "temps" = prep + cuis.
 Réponds uniquement avec ce JSON :
 {"nom":"...","cuisine":"pays ou style","prot":"...","temps":45,"four":200,"ing":[{"nom":"...","q":200,"u":"g","rayon":"B"}],"steps":[{"t":"...","min":10}],"d":{"prep":15,"cuis":30,"diff":1,"ust":"...","astuce":"...","service":"...","conserv":"..."}}`;
@@ -2762,6 +2922,27 @@ function undoDel(){
   save();render();document.getElementById("toastSlot").innerHTML="";
 }
 
+
+async function runImport(){
+  const ta=document.getElementById("impText"),er=document.getElementById("impErr"),bt=document.getElementById("impGo");
+  const txt=(ta&&ta.value||"").trim();if(txt.length<40){er.textContent="Collez le texte complet de la recette (ingrédients et étapes).";return}
+  bt.disabled=true;bt.lastChild.textContent=" Claude lit la recette…";er.textContent="";
+  const prompt=`Voici le texte d'une recette copié par une personne. Mets-la au format JSON demandé, en français, sans rien inventer d'important ; complète seulement ce qui manque (durées, rayon, ustensiles, astuce). Ramène les quantités à 2 personnes.
+Pour chaque ingrédient : "u" parmi "g","ml","","c.s.","c.c.","boîte","gousse","pot","botte","sachet","morceau","boule","cube" ("" = à l'unité) ; "rayon" parmi F, B, C, E, S, P. N'inclus pas huile, sel, poivre. "prot" parmi : ${PROTS.join(", ")}. "four" = °C ou null. Chaque étape a "min" (0 si aucune attente).
+Réponds uniquement avec ce JSON :
+{"nom":"...","cuisine":"...","prot":"...","temps":45,"four":200,"ing":[{"nom":"...","q":200,"u":"g","rayon":"B"}],"steps":[{"t":"...","min":10}],"d":{"prep":15,"cuis":30,"diff":1,"ust":"...","astuce":"...","service":"...","conserv":"..."}}
+
+Texte de la recette :
+"""${txt.slice(0,12000)}"""`;
+  try{
+    const res=await AI.sample.json(prompt,{cache:false});const r=toRecipe(res,0);
+    if(!r){er.textContent="Je n’ai pas réussi à lire cette recette. Vérifiez qu’elle contient ingrédients et étapes.";bt.disabled=false;bt.lastChild.textContent=" Mettre en forme";return}
+    const d=res&&res.d||{},num=(v,a,b)=>{v=Math.round(Number(v));return v>=a&&v<=b?v:null};const prep=num(d.prep,1,600),cuis=num(d.cuis,0,900);
+    if(prep!=null&&cuis!=null)r.d={prep,cuis,diff:num(d.diff,1,3)||1,ust:String(d.ust||"Ustensiles courants").slice(0,200),astuce:String(d.astuce||"Goûtez et ajustez l’assaisonnement en fin de cuisson.").slice(0,400),service:String(d.service||"—").slice(0,200),conserv:String(d.conserv||"—").slice(0,200)};
+    r.manque=[];GEN.push(r);const nid=saveGen(r.id);render();UI.sheetTab="ing";UI.viewP=S.p;openRecipe(nid);toast("Recette importée dans « Mes recettes »");
+  }catch(e){er.textContent=e&&e.code==="rate_limited"?"Trop de demandes, réessayez dans quelques minutes.":e&&(e.code==="not_granted"||e.code==="sampling_disabled")?"L’accès à Claude est refusé pour cette page.":"La mise en forme a échoué. Réessayez.";bt.disabled=false;bt.lastChild.textContent=" Mettre en forme"}
+}
+
 /* ---------- Événements ---------- */
 function toggleIn(arr,v){return arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]}
 document.addEventListener("click",e=>{
@@ -2771,6 +2952,13 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
   const ds=t.dataset,inSheet=!!t.closest(".sheet");
   if(t.id==="openFridge")return openFridge();
+  if(t.id==="openPantry")return openPantry();
+  if(ds.pan){S.frigo=toggleIn(S.frigo,ds.pan);save();t.setAttribute("aria-pressed",String(S.frigo.includes(ds.pan)));document.getElementById("panRes").innerHTML=pantryResults();const pc=document.getElementById("panCount");if(pc)pc.textContent=`${S.frigo.length} ingrédient${S.frigo.length>1?"s":""} cochés`;return}
+  if(t.id==="panClear"){S.frigo=[];save();openPantry();return}
+  if(ds.diet){S.excl=toggleIn(S.excl,ds.diet);save();t.setAttribute("aria-pressed",String(S.excl.includes(ds.diet)));return toast(S.excl.includes(ds.diet)?"Préférence appliquée partout":"Préférence retirée")}
+  if(ds.undislike!=null){S.dislike.splice(+ds.undislike,1);save();return render()}
+  if(ds.moveto){const [a,b]=ds.moveto.split("|").map(Number);const tmp=S.week[a];S.week[a]=S.week[b];S.week[b]=tmp;save();closeSheet();render();return toast(`${JOURS[a]} ⇄ ${JOURS[b]}`)}
+  if(t.id==="impGo")return runImport();
   if(ds.rate){const [id,n]=ds.rate.split("|");setRate(id,+n);if(UI.cook&&UI.cook.done){closeCook(false);render();return toast(`Noté ${n}/5, merci !`)}if(UI.tab==="recettes"&&UI.filter==="Mieux notées")refreshList();return}
   if(ds.cooked){markCooked(ds.cooked,UI.viewP);const st=document.getElementById("stab");if(st&&UI.sheetTab==="more")st.innerHTML=sheetTab(byId(ds.cooked));return toast("Ajouté à votre historique")}
   if(t.id==="surprise"){const pool=(UI.tab==="recettes"?filtered():all()).filter(r=>!S.ban.includes(r.id)&&r.id!==UI.openId);if(!pool.length)return toast("Aucune recette avec ces filtres");
@@ -2798,7 +2986,7 @@ document.addEventListener("click",e=>{
   if(t.id==="vpMinus"||t.id==="vpPlus"){UI.viewP=clampP((UI.viewP||S.p)+(t.id==="vpPlus"?1:-1));const o=document.getElementById("vpOut");if(o){o.textContent=UI.viewP;const lb=o.nextElementSibling&&o.nextElementSibling.nextElementSibling;if(lb)lb.textContent="personne"+(UI.viewP>1?"s":"")}if(UI.sheetTab==="ing"){const st=document.getElementById("stab");if(st)st.innerHTML=sheetTab(byId(UI.openId))}return}
   if(t.id==="closeSheet")return closeSheet();
   if(t.id==="gen")return generate();
-  if(t.id==="copyMenu")return copy(menuText(),"Menu copié");
+  if(t.id==="copyMenu")return shareOrCopy(menuText(),"Menu de la semaine","Menu copié");
   if(ds.daymenu!=null)return openDayMenu(+ds.daymenu);
   if(ds.swap!=null){const i=+ds.swap;S.week[i].d=pickFor(i,ids(),null);save();if(inSheet)closeSheet();render();return toast(`${JOURS[i]} : ${short(byId(S.week[i].d).nom)}`)}
   if(ds.clear!=null){S.week[+ds.clear]={d:null,x2:false};save();closeSheet();return render()}
@@ -2826,7 +3014,7 @@ document.addEventListener("click",e=>{
   if(ds.placeday!=null){const i=+ds.placeday;let rid=UI.openId;if(String(rid).startsWith("g"))rid=saveGen(rid);S.week[i].d=rid;if(UI.viewP&&UI.viewP!==S.p)S.week[i].p=UI.viewP;else delete S.week[i].p;save();closeSheet();render();return toast(`Au menu de ${JOURS[i].toLowerCase()}`)}
   if(t.id==="newRecipe")return openForm();
   if(ds.timer)return startTimer(+ds.timer,ds.tlabel);
-  if(t.id==="stopTimer"){if(T)clearInterval(T.iv);T=null;return drawTimer()}
+  if(ds.stoptimer)return stopTimer(+ds.stoptimer);
   if(t.id==="delRecipe"){
     if(!UI.confirmDel){UI.confirmDel=true;t.lastChild.textContent="Confirmer la suppression";return}
     const id=ds.del;S.mine=S.mine.filter(r=>r.id!==id);S.week.forEach(w=>{if(w.d===id)w.d=null});S.fav=S.fav.filter(x=>x!==id);S.ban=S.ban.filter(x=>x!==id);delete S.notes[id];
@@ -2843,7 +3031,7 @@ document.addEventListener("click",e=>{
     catch(_){er.textContent="Code non reconnu. Collez le texte complet copié depuis l’autre appareil."}return}
   if(t.id==="uncheck"){S.done={};save();return render()}
   if(ds.delx!=null){e.preventDefault();const name=S.extras[+ds.delx];S.extras.splice(+ds.delx,1);delete S.done["x|"+name];save();return render()}
-  if(t.id==="copy")return copy(listText(),"Liste copiée");
+  if(t.id==="copy")return shareOrCopy(listText(),"Liste de courses","Liste copiée");
 });
 document.addEventListener("change",e=>{
   if(e.target.id==="camIn"||e.target.id==="galIn"){addPhotos([...e.target.files]);e.target.value="";return}
@@ -2854,17 +3042,28 @@ document.addEventListener("change",e=>{
 });
 document.addEventListener("input",e=>{
   if(e.target.id==="aiq"){AI.q=e.target.value;return}
+  if(e.target.id==="panq"){document.getElementById("panChips").innerHTML=pantryChips(e.target.value);return}
   if(e.target.id==="search"){UI.q=e.target.value;clearTimeout(UI.qt);UI.qt=setTimeout(refreshList,140);return}
   if(e.target.dataset&&e.target.dataset.note){const id=e.target.dataset.note,v=e.target.value;if(v.trim())S.notes[id]=v.slice(0,2000);else delete S.notes[id];save()}
 });
 document.addEventListener("keydown",e=>{if(UI.cook){if(e.key==="Escape")closeCook(false);if(e.key==="ArrowRight")cookGo(UI.cook.i+1);if(e.key==="ArrowLeft")cookGo(UI.cook.i-1);return}if(e.key==="Escape")closeSheet()});
 document.addEventListener("submit",e=>{
+  if(e.target.id==="dislikeForm"){e.preventDefault();const v=document.getElementById("dislikeIn").value.trim().toLowerCase().slice(0,30);if(v&&!S.dislike.includes(v)){S.dislike.push(v);save()}render();return toast(v?`« ${v} » sera évité`:"")}
   if(e.target.id==="aiForm"){e.preventDefault();return runAI(document.getElementById("aiq").value)}
   if(e.target.id==="addForm"){e.preventDefault();const inp=document.getElementById("addInput"),v=inp.value.trim();if(!v)return;
     if(!S.extras.includes(v))S.extras.push(v.slice(0,80));save();render();toast("Article ajouté");const n=document.getElementById("addInput");if(n)n.focus()}
   if(e.target.id==="recipeForm"){e.preventDefault();submitRecipe()}
 });
 
+/* ---------- Application Android : bouton retour ---------- */
+try{const AP=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;
+  if(AP)AP.addListener("backButton",()=>{
+    if(UI.cook){closeCook(false);render();return}
+    if(document.getElementById("sheetBg")){closeSheet();return}
+    if(UI.pick!=null){UI.pick=null;return goTab("semaine")}
+    if(UI.tab!=="semaine")return goTab("semaine");
+    AP.exitApp();
+  })}catch(e){}
 render();
 </script>
 

@@ -31,18 +31,15 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
-      - name: Copier l'application web (sans service worker)
-        run: |
-          mkdir -p www
-          cp ../index.html ../icon-192.png ../icon-512.png www/
-          sed -i '/serviceWorker/d' www/index.html
+      - name: Préparer l'application (polices intégrées, hors connexion)
+        run: python3 prepare.py
 
       - name: Installer Capacitor
         run: npm install --no-audit --no-fund
@@ -51,18 +48,19 @@ jobs:
         run: |
           npx cap add android
           npx @capacitor/assets generate --android \
-            --iconBackgroundColor '#060914' --iconBackgroundColorDark '#060914' \
-            --splashBackgroundColor '#060914' --splashBackgroundColorDark '#060914'
+            --iconBackgroundColor '#efe5d1' --iconBackgroundColorDark '#efe5d1' \
+            --splashBackgroundColor '#efe5d1' --splashBackgroundColorDark '#efe5d1'
           npx cap sync android
 
       - name: Numéro de version
         run: |
           sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/" android/app/build.gradle
           sed -i "s/versionName \"[^\"]*\"/versionName \"1.${{ github.run_number }}\"/" android/app/build.gradle
+          grep -E "targetSdkVersion|compileSdkVersion" android/variables.gradle
 
-      - name: Compiler
+      - name: Compiler (APK pour installer, AAB pour le Play Store)
         working-directory: android-app/android
-        run: ./gradlew assembleRelease --no-daemon
+        run: ./gradlew assembleRelease bundleRelease --no-daemon
 
       - name: Signer
         env:
@@ -74,12 +72,21 @@ jobs:
             --ks-pass env:KS_PW --key-pass env:KS_PW \
             --out Carnet-de-menus.apk aligned.apk
           "$BT/apksigner" verify Carnet-de-menus.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab Carnet-de-menus-PlayStore.aab
+          jarsigner -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore keystore/carnet.jks -storepass:env KS_PW -keypass:env KS_PW \
+            Carnet-de-menus-PlayStore.aab carnet
+          jarsigner -verify Carnet-de-menus-PlayStore.aab | tail -1
 
-      - name: Publier le fichier .apk
+      - name: Publier
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.${{ github.run_number }}
           name: Carnet de menus 1.${{ github.run_number }}
-          body: "Téléchargez **Carnet-de-menus.apk** ci-dessous depuis votre téléphone Android, puis ouvrez-le pour l'installer."
-          files: android-app/Carnet-de-menus.apk
+          body: |
+            - **Carnet-de-menus.apk** : à télécharger depuis votre téléphone Android pour l'installer directement.
+            - **Carnet-de-menus-PlayStore.aab** : le fichier à envoyer dans la Google Play Console.
+          files: |
+            android-app/Carnet-de-menus.apk
+            android-app/Carnet-de-menus-PlayStore.aab
           make_latest: true
