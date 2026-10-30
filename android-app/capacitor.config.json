@@ -1,0 +1,17 @@
+{
+  "appId": "fr.damien.carnetmenus",
+  "appName": "Carnet de menus",
+  "webDir": "www",
+  "backgroundColor": "#060914",
+  "android": {
+    "backgroundColor": "#060914",
+    "adjustMarginsForEdgeToEdge": "force"
+  },
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "DARK",
+      "backgroundColor": "#060914"
+    }
+  }
+}
