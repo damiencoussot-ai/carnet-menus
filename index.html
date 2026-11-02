@@ -1036,6 +1036,34 @@ html[data-skin="futur"] .pbar i{background:linear-gradient(90deg,#2ff0b0,#3ccfff
 .week7{grid-template-columns:repeat(7,1fr)}
 html[data-skin="mamie"] .days .wkhead{font-family:var(--hand);font-size:1.05rem;letter-spacing:0;text-transform:none;color:var(--accent);background:#fbf3e6}
 html[data-skin="futur"] .days .wkhead{font-family:var(--mono);background:rgba(255,255,255,.04)}
+
+/* ---- v19 : rappel mensuel ---- */
+.monthask{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:20px;background:var(--surface);border:2px solid var(--accent);box-shadow:var(--shadow)}
+.sheet .monthask{border:0;box-shadow:none;padding:0;background:transparent}
+.ma-head{display:flex;gap:12px;align-items:center}
+.ma-head>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ma-head b{font-size:1.1rem}
+.ma-head span:not(.eyebrow){font-size:.86rem;color:var(--muted)}
+.ma-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);flex:none}
+.ma-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ma-opt{border:1.5px solid var(--line);background:var(--soft);border-radius:14px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;text-align:center;font:inherit;color:var(--ink)}
+.ma-opt b{font-size:.95rem}
+.ma-opt small{font-size:.7rem;color:var(--muted);line-height:1.25}
+.ma-opt.cur{border-color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.ma-opt{transition:transform .1s}.ma-opt:active{transform:scale(.96)}}
+.seg.rday button{min-width:36px}
+.monthask .row{gap:16px}
+.monthask .linkbtn{border:0;background:transparent;padding:4px 0;font:inherit;font-size:.86rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.ma-ic svg.i{color:var(--accent-ink);stroke:currentColor;width:24px;height:24px}
+html[data-skin="futur"] .ma-ic svg.i{color:#fff}
+html[data-skin] .sheet .monthask{border:0;padding:0;background:transparent;box-shadow:none}
+html[data-skin="mamie"] .monthask{border-radius:6px;border:2px dashed var(--accent);background:#fffcf3}
+html[data-skin="mamie"] .ma-head b{font-family:var(--display);font-style:italic;font-size:1.3rem}
+html[data-skin="mamie"] .ma-opt{border-radius:6px;background:#fffdf7}
+html[data-skin="futur"] .monthask{background:var(--glass);border-color:#8a6bff;box-shadow:0 0 24px rgba(138,107,255,.3)}
+html[data-skin="futur"] .ma-ic{background:linear-gradient(120deg,#3ccfff,#8a6bff,#ff4fd8)}
+html[data-skin="futur"] .ma-opt{background:rgba(255,255,255,.05)}
+html[data-skin="futur"] .ma-opt.cur{border-color:#8a6bff;box-shadow:0 0 14px rgba(138,107,255,.4)}
 </style>
 </head>
 <body>
@@ -2009,7 +2037,7 @@ ban:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'
 };
 const icon=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 
-function fresh(){return{start:mondayISO(),excl:[],dislike:[],hist:[],rate:{},skin:"mamie",hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
+function fresh(){return{remind:{on:true,day:3,h:18,m:30,asked:false},monthAsk:"",snooze:0,start:mondayISO(),excl:[],dislike:[],hist:[],rate:{},skin:"mamie",hidden:{},p:2,week:DEF_WEEK.map(d=>({d,x2:false})),done:{},frigo:[],extras:[],fav:[],ban:[],mine:[],notes:{},cfg:{quick:true,fish:true,veg:2}}}
 function normalize(o){
   const s=fresh();if(!o||typeof o!=="object")return s;
   if(Number.isInteger(o.p))s.p=Math.min(8,Math.max(1,o.p));
@@ -2024,6 +2052,8 @@ function normalize(o){
   if(Array.isArray(o.hist))s.hist=o.hist.filter(h=>h&&typeof h.id==="string"&&Number.isFinite(h.t)).slice(-300);
   if(o.rate&&typeof o.rate==="object")Object.entries(o.rate).forEach(([k,v])=>{v=Math.round(+v);if(v>=1&&v<=5)s.rate[k]=v});
   if(o.cfg&&typeof o.cfg==="object")s.cfg={quick:!!o.cfg.quick,fish:!!o.cfg.fish,veg:Math.min(4,Math.max(0,+o.cfg.veg||0))};
+  if(o.remind&&typeof o.remind==="object"){const r=o.remind;s.remind={on:r.on!==false,day:Math.min(5,Math.max(1,Math.round(+r.day)||3)),h:Math.min(23,Math.max(0,Math.round(+r.h)||18)),m:[0,15,30,45].includes(+r.m)?+r.m:30,asked:!!r.asked}}
+  if(typeof o.monthAsk==="string")s.monthAsk=o.monthAsk;if(Number.isFinite(o.snooze))s.snooze=o.snooze;
   if(typeof o.start==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(o.start))s.start=o.start;
   if(Array.isArray(o.week)&&[7,14,28].includes(o.week.length))s.week=o.week.map(x=>typeof x==="string"||x===null?{d:x,x2:false}:{d:x&&x.d||null,x2:!!(x&&x.x2),...(Number.isInteger(x&&x.p)&&x.p>=1&&x.p<=12?{p:x.p}:{})});
   return s;
@@ -2242,6 +2272,53 @@ function wasteCard(items){
     ${w.map(({it,sug})=>`<div class="wrow"><b>${esc(it.nom)}</b><div class="chips">${sug.map(r=>`<button class="chip" data-open="${esc(r.id)}">${esc(short(r.nom))}</button>`).join("")}</div></div>`).join("")}</section>`;
 }
 
+
+/* ---------- Rappel mensuel : « ce mois-ci, courses pour 1 semaine, 2 semaines ou 1 mois ? » ---------- */
+const ymOf=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+const moisNom=d=>d.toLocaleDateString("fr-FR",{month:"long"});
+function monthDue(){
+  const t=new Date(),day=t.getDate();
+  if(S.monthAsk===ymOf(t))return false;
+  if(S.snooze&&Date.now()<S.snooze)return false;
+  return day>=Math.max(1,S.remind.day-2)&&day<=20;
+}
+function monthCard(){
+  if(!monthDue())return"";
+  const m=moisNom(new Date());
+  return `<section class="monthask"><div class="ma-head"><span class="ma-ic">${icon("cart")}</span><div><span class="eyebrow">Nouveau mois</span><b>Vos courses de ${m}</b><span>Vous les faites pour combien de temps ?</span></div></div>
+    <div class="ma-opts">${PLENS.map(([n,l])=>`<button class="ma-opt${S.week.length===n?" cur":""}" data-month="${n}"><b>${l}</b><small>${n===7?"courses chaque semaine":n===14?"courses tous les 15 jours":"un grand plein pour le mois"}</small></button>`).join("")}</div>
+    <div class="row"><button class="linkbtn" data-month="keep">Garder mon planning actuel</button><button class="linkbtn" id="monthLater">Me le redemander demain</button></div></section>`;
+}
+function openMonthAsk(){const c=monthCard();if(!c)return;sheet(`<div class="sheet-head"><h2>Courses du mois</h2>${closeBtn}</div>${c}`,"Courses du mois")}
+function monthAnswer(v){
+  const t=new Date();S.monthAsk=ymOf(t);S.snooze=0;
+  if(v==="keep"){save();closeSheet();render();return toast("C’est noté, on garde votre planning")}
+  const n=+v,future=S.week.some((w,i)=>w.d&&weekDates()[i]>=new Date(new Date().setHours(0,0,0,0)));
+  if(expired()||!future){S.week=Array.from({length:n},()=>({d:null,x2:false}));save();closeSheet();UI.tab="semaine";generate()}
+  else{save();closeSheet();UI.tab="semaine";if(n!==S.week.length)setLen(n);else render()}
+  toast(`${moisNom(t).replace(/^./,c=>c.toUpperCase())} : courses ${n===7?"chaque semaine":n===14?"tous les 15 jours":"pour le mois"}`);
+}
+/* Notification sur le téléphone (application Android) */
+const LN=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
+async function scheduleReminder(ask){
+  const L=LN();if(!L)return false;
+  try{
+    await L.cancel({notifications:[{id:501}]}).catch(()=>{});
+    if(!S.remind.on)return true;
+    let st=await L.checkPermissions();
+    if(st.display!=="granted"&&ask){st=await L.requestPermissions();S.remind.asked=true;save()}
+    if(st.display!=="granted")return false;
+    await L.schedule({notifications:[{id:501,title:"Courses du mois",body:"Ce mois-ci, vous faites vos courses pour 1 semaine, 2 semaines ou 1 mois ? Touchez pour choisir.",schedule:{on:{day:S.remind.day,hour:S.remind.h,minute:S.remind.m},allowWhileIdle:true}}]});
+    return true;
+  }catch(e){return false}
+}
+function bootMonthly(){
+  const L=LN();
+  if(L){try{L.addListener("localNotificationActionPerformed",()=>{S.snooze=0;UI.tab="semaine";render();setTimeout(openMonthAsk,300)})}catch(e){}
+    scheduleReminder(!S.remind.asked)}
+  if(monthDue())setTimeout(openMonthAsk,900);
+}
+
 /* ---------- Rendu ---------- */
 const TABS=[["semaine","Menus","cal"],["courses","Courses","cart"],["recettes","Recettes","book"],["terroirs","Terroirs","globe"],["reglages","Réglages","sliders"]];
 function leftCount(){return shopping().filter(i=>!S.done[i.k]&&!i.home).length}
@@ -2345,7 +2422,7 @@ function viewSemaine(){
       </button></li>`}).join("");
   const per=`<div class="seg plen" role="group" aria-label="Durée du planning">${PLENS.map(([n,l])=>`<button data-plen="${n}" aria-pressed="${N===n}">${l}</button>`).join("")}</div>`;
   const exp=expired()?`<div class="banner"><span>Ce planning est terminé. On prépare la suite ?</span><button class="btn small" id="gen">${icon("sparkle")}Générer</button></div>`:"";
-  return `<div class="view">${per}${exp}${strip}${hero}${fridgeCta()}
+  return `<div class="view">${monthCard()}${per}${exp}${strip}${hero}${fridgeCta()}
     <div class="sechead"><h2>${N===7?"La semaine":N===14?"Les 2 semaines":"Le mois"}</h2><div class="row" style="gap:6px;flex-wrap:nowrap"><button class="iconbtn" id="copyMenu" aria-label="Copier le menu">${icon("copy")}</button><button class="btn small" id="gen">${icon("sparkle")}Générer</button></div></div>
     ${rs.length?tiles:""}
     <ul class="days">${rows}</ul>
@@ -2572,6 +2649,12 @@ function viewReglages(){
     <section class="sgroup"><span class="label">Durée du planning</span>
       <div class="seg plen" role="group" aria-label="Durée du planning">${PLENS.map(([n,l])=>`<button data-plen="${n}" aria-pressed="${S.week.length===n}">${l}</button>`).join("")}</div>
       <span class="note">Menus et liste de courses couvrent toute la période. Les courses peuvent aussi se faire semaine par semaine, pour les produits frais.</span></section>
+    <section class="sgroup"><span class="label">Rappel des courses du mois</span>
+      <div class="srow"><span><b>Me demander chaque mois</b><small>1 semaine, 2 semaines ou 1 mois ?</small></span><button class="chip leaf" data-remind="on" aria-pressed="${S.remind.on}">${S.remind.on?"Activé":"Désactivé"}</button></div>
+      ${S.remind.on?`<div class="srow"><span><b>Le</b><small>jour du mois</small></span><div class="seg rday" role="group" aria-label="Jour du rappel">${[1,2,3,4,5].map(d=>`<button data-rday="${d}" aria-pressed="${S.remind.day===d}">${d}</button>`).join("")}</div></div>
+      <div class="srow"><span><b>À</b><small>heure de la notification</small></span><select id="rtime" aria-label="Heure du rappel">${[8,9,10,12,14,17,18,19,20].flatMap(h=>[0,30].map(m=>[h,m])).map(([h,m])=>`<option value="${h}:${m}" ${S.remind.h===h&&S.remind.m===m?"selected":""}>${h} h ${m?"30":"00"}</option>`).join("")}</select></div>`:""}
+      <span class="note">${LN()?"Une notification arrive sur votre téléphone ce jour-là. Si vous ouvrez l’application avant, la question s’affiche aussi.":"Dans l’application Android, une notification arrive ce jour-là. Ici, la question s’affiche quand vous ouvrez le carnet en début de mois."}</span>
+      <button class="btn ghost small" id="monthNow">${icon("cart")}Choisir pour ${moisNom(new Date())} maintenant</button></section>
     <section class="sgroup"><span class="label">Générer les menus</span>
       <div class="chips"><button class="chip leaf" data-cfg="quick" aria-pressed="${S.cfg.quick}">Rapide en semaine (≤ 40 min)</button><button class="chip leaf" data-cfg="fish" aria-pressed="${S.cfg.fish}">1 soir poisson minimum</button></div>
       <div class="srow"><span><b>Soirs sans viande</b><small>Par semaine générée</small></span><div class="stepper"><button id="vMinus" aria-label="Un de moins">−</button><output id="vOut">${S.cfg.veg}</output><button id="vPlus" aria-label="Un de plus">+</button></div></div></section>
@@ -3001,6 +3084,11 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
   const ds=t.dataset,inSheet=!!t.closest(".sheet");
   if(t.id==="openFridge")return openFridge();
+  if(ds.month)return monthAnswer(ds.month);
+  if(t.id==="monthLater"){S.snooze=Date.now()+20*36e5;save();closeSheet();render();return toast("Je vous le redemande demain")}
+  if(t.id==="monthNow"){S.monthAsk="";S.snooze=0;save();render();return openMonthAsk()}
+  if(ds.remind){S.remind.on=!S.remind.on;save();render();scheduleReminder(true).then(ok=>{if(S.remind.on&&LN()&&!ok)toast("Autorisez les notifications pour Carnet de menus dans les réglages du téléphone")});return}
+  if(ds.rday){S.remind.day=+ds.rday;save();render();scheduleReminder(false);return toast(`Rappel le ${S.remind.day} de chaque mois`)}
   if(ds.plen)return setLen(+ds.plen);
   if(ds.shopw!=null){UI.shopW=+ds.shopw;return render()}
   if(t.id==="openPantry")return openPantry();
@@ -3085,6 +3173,7 @@ document.addEventListener("click",e=>{
   if(t.id==="copy")return shareOrCopy(listText(),"Liste de courses","Liste copiée");
 });
 document.addEventListener("change",e=>{
+  if(e.target.id==="rtime"){const [h,m]=e.target.value.split(":").map(Number);S.remind.h=h;S.remind.m=m;save();scheduleReminder(false);return toast(`Rappel à ${h} h ${m?"30":"00"}`)}
   if(e.target.id==="camIn"||e.target.id==="galIn"){addPhotos([...e.target.files]);e.target.value="";return}
   const k=e.target.dataset&&e.target.dataset.done;if(k==null)return;
   if(e.target.checked)S.done[k]=true;else delete S.done[k];save();
@@ -3116,6 +3205,7 @@ try{const AP=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;
     AP.exitApp();
   })}catch(e){}
 render();
+bootMonthly();
 </script>
 
 <script>

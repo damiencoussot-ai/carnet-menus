@@ -51,6 +51,7 @@ jobs:
             --iconBackgroundColor '#efe5d1' --iconBackgroundColorDark '#efe5d1' \
             --splashBackgroundColor '#efe5d1' --splashBackgroundColorDark '#efe5d1'
           npx cap sync android
+          cp -r res/. android/app/src/main/res/
 
       - name: Numéro de version
         run: |
